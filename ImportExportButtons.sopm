@@ -10,5 +10,7 @@
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
+        <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
     </Filelist>
 </otobo_package>
