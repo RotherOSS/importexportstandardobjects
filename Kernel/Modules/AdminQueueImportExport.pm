@@ -140,12 +140,12 @@ sub Run {
             DYNAMICFIELD:
             for my $DynamicField ( sort keys %{ $ImportData->{DynamicFields} } ) {
 
-                my $Selected = grep { $ImportData->{DynamicFields}->{$DynamicField}->{Name} eq $_ } @DynamicFieldsSelected;
+                my $Selected = grep { $ImportData->{DynamicFields}{$DynamicField}{Name} eq $_ } @DynamicFieldsSelected;
                 next DYNAMICFIELD if !$Selected;
 
-                next DYNAMICFIELD if !IsHashRefWithData( $ImportData->{DynamicFields}->{$DynamicField} );
+                next DYNAMICFIELD if !IsHashRefWithData( $ImportData->{DynamicFields}{$DynamicField} );
 
-                my $FieldType = $ImportData->{DynamicFields}->{$DynamicField}->{FieldType};
+                my $FieldType = $ImportData->{DynamicFields}{$DynamicField}{FieldType};
 
                 if ( !IsHashRefWithData( $FieldTypeConfig->{$FieldType} ) ) {
 
@@ -157,7 +157,7 @@ sub Run {
                     next DYNAMICFIELD;
                 }
 
-                push @DynamicFieldsImport, $ImportData->{DynamicFields}->{$DynamicField};
+                push @DynamicFieldsImport, $ImportData->{DynamicFields}{$DynamicField};
             }
 
             if ($OverwriteExistingEntities) {
@@ -182,7 +182,7 @@ sub Run {
                 my $Selected = grep { $DynamicField eq $_ } @DynamicFieldForScreensSelected;
                 next DYNAMICFIELDSCREEN if !$Selected;
 
-                $DynamicFieldsScreensImport{$DynamicField} = $ImportData->{DynamicFieldsScreens}->{$DynamicField};
+                $DynamicFieldsScreensImport{$DynamicField} = $ImportData->{DynamicFieldsScreens}{$DynamicField};
             }
 
             if (%DynamicFieldsScreensImport) {
@@ -307,7 +307,7 @@ sub _Mask {
 
         # export
         my $DynamicFields = $DynamicFieldObject->GetValidDynamicFields();
-        %{ $Param{Data}->{DynamicFields} } = %{$DynamicFields};
+        %{ $Param{Data}{DynamicFields} } = %{$DynamicFields};
     }
 
     my $Output = $LayoutObject->Header();
@@ -344,21 +344,21 @@ sub _DynamicFieldShow {
 
     # check if at least 1 dynamic field is registered in the system
     if (
-        IsHashRefWithData( $Param{Data}->{DynamicFields} )
-        || IsHashRefWithData( $Param{Data}->{DynamicFieldsScreens} )
+        IsHashRefWithData( $Param{Data}{DynamicFields} )
+        || IsHashRefWithData( $Param{Data}{DynamicFieldsScreens} )
         )
     {
 
         my @DynamicFieldsAlreadyUsed;
 
         DYNAMICFIELD:
-        for my $DynamicField ( sort keys %{ $Param{Data}->{DynamicFields} } ) {
+        for my $DynamicField ( sort keys %{ $Param{Data}{DynamicFields} } ) {
 
             push @DynamicFieldsAlreadyUsed, $DynamicField;
 
             my $DynamicFieldData;
-            if ( IsHashRefWithData( $Param{Data}->{DynamicFields}->{$DynamicField} ) ) {
-                $DynamicFieldData = $Param{Data}->{DynamicFields}->{$DynamicField};
+            if ( IsHashRefWithData( $Param{Data}{DynamicFields}{$DynamicField} ) ) {
+                $DynamicFieldData = $Param{Data}{DynamicFields}{$DynamicField};
 
             }
             else {
@@ -427,7 +427,7 @@ sub _DynamicFieldShow {
             }
 
             if (
-                IsHashRefWithData( $Param{Data}->{DynamicFieldsScreens}->{$DynamicField} )
+                IsHashRefWithData( $Param{Data}{DynamicFieldsScreens}{$DynamicField} )
                 || $Param{Type} ne 'Import'
                 )
             {
@@ -442,10 +442,10 @@ sub _DynamicFieldShow {
         }
 
         DYNAMICFIELDSCREEN:
-        for my $DynamicField ( sort keys %{ $Param{Data}->{DynamicFieldsScreens} } ) {
+        for my $DynamicField ( sort keys %{ $Param{Data}{DynamicFieldsScreens} } ) {
 
             next DYNAMICFIELDSCREEN if grep { $DynamicField eq $_ } @DynamicFieldsAlreadyUsed;
-            next DYNAMICFIELDSCREEN if !IsHashRefWithData( $Param{Data}->{DynamicFieldsScreens}->{$DynamicField} );
+            next DYNAMICFIELDSCREEN if !IsHashRefWithData( $Param{Data}{DynamicFieldsScreens}{$DynamicField} );
 
             my %DynamicFieldData = (
                 Name  => $DynamicField,
