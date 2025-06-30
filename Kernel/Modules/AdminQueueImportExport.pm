@@ -54,7 +54,6 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get objects
-    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $YAMLObject   = $Kernel::OM->Get('Kernel::System::YAML');
@@ -126,18 +125,18 @@ sub Run {
         # ------------------------------------------------------------ #
         # Import Queues
         # ------------------------------------------------------------ #
-        if ( IsHashRefWithData( $ImportData->{Queues} ) ) {
+        if ( IsArrayRefWithData( $ImportData->{Queues} ) ) {
 
             my @QueuesImport;
-            QUEUE:
-            for my $Queue ( sort keys %{ $ImportData->{Queues} } ) {
+            QUEUEINDEX:
+            for my $QueueIndex ( 0 .. $#{ $ImportData->{Queues} } ) {
 
-                my $Selected = grep { $ImportData->{Queues}{$Queue}{Name} eq $_ } @QueuesSelected;
+                my $Selected = grep { $ImportData->{Queues}[$QueueIndex]{Name} eq $_ } @QueuesSelected;
                 next QUEUE if !$Selected;
 
-                next QUEUE if !IsHashRefWithData( $ImportData->{Queues}{$Queue} );
+                next QUEUE if !IsHashRefWithData( $ImportData->{Queues}[$QueueIndex] );
 
-                push @QueuesImport, $ImportData->{Queues}{$Queue};
+                push @QueuesImport, $ImportData->{Queues}[$QueueIndex];
             }
 
             $Self->_ImportQueues(
@@ -286,28 +285,18 @@ sub _QueueShow {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
-    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
 
     # check if at least 1 dynamic field is registered in the system
-    if ( IsHashRefWithData( $Param{Data}{Queues} ) ) {
+    if ( IsArrayRefWithData( $Param{Data}{Queues} ) ) {
 
         my @QueuesAlreadyUsed;
 
-        QUEUE:
-        for my $Queue ( sort keys %{ $Param{Data}{Queues} } ) {
+        QUEUEINDEX:
+        for my $QueueIndex ( 0 .. $#{ $Param{Data}{Queues} } ) {
 
-            push @QueuesAlreadyUsed, $Queue;
+            my $QueueData = $Param{Data}{Queues}[$QueueIndex];
 
-            my $QueueData;
-            if ( IsHashRefWithData( $Param{Data}{Queues}{$Queue} ) ) {
-                $QueueData = $Param{Data}{Queues}{$Queue};
-
-            }
-            else {
-                $QueueData = $QueueObject->QueueGet(
-                    Name => $Queue,
-                );
-            }
+            push @QueuesAlreadyUsed, $QueueData->{Name};
 
             next QUEUE if !IsHashRefWithData($QueueData);
 
@@ -432,6 +421,32 @@ sub _ImportQueues {
 
     # NOTE
     #   sorting not important as parent queue is not checked anywhere despite in the AdminQueue frontend module
+    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+    QUEUEINDEX:
+    for my $QueueIndex ( 0 .. $#{ $Param{Queues} } ) {
+        my $QueueData = $Param{Queues}[$QueueIndex];
+
+        my $QueueID = $QueueObject->QueueLookup( Queue => $QueueData->{Name} );
+
+        # skip if queue with same name exists and overwrite is not set
+        next QUEUEINDEX if ( !$Param{OverwriteExistingEntities} && $QueueID );
+
+        if ($QueueID) {
+            my $Success = $QueueObject->QueueUpdate(
+                $QueueData->%*,
+                QueueID => $QueueID,
+                UserID  => $Self->{UserID},
+            );
+            next QUEUEINDEX unless $Success;
+        }
+        else {
+            my $QueueID = $QueueObject->QueueAdd(
+                $QueueData->%*,
+                UserID => $Self->{UserID},
+            );
+            next QUEUEINDEX unless $QueueID;
+        }
+    }
 
     return;
 }
