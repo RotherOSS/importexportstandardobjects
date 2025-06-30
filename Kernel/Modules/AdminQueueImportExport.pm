@@ -419,14 +419,19 @@ sub _ExportQueues {
 sub _ImportQueues {
     my ( $Self, %Param ) = @_;
 
+    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+    my %QueueList   = $QueueObject->QueueList(
+        Valid => 0,
+    );
+    my %QueueLookup = reverse %QueueList;
+
     # NOTE
     #   sorting not important as parent queue is not checked anywhere despite in the AdminQueue frontend module
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
     QUEUEINDEX:
     for my $QueueIndex ( 0 .. $#{ $Param{Queues} } ) {
         my $QueueData = $Param{Queues}[$QueueIndex];
 
-        my $QueueID = $QueueObject->QueueLookup( Queue => $QueueData->{Name} );
+        my $QueueID = $QueueLookup{ $QueueData->{Name} };
 
         # skip if queue with same name exists and overwrite is not set
         next QUEUEINDEX if ( !$Param{OverwriteExistingEntities} && $QueueID );
