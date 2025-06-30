@@ -257,7 +257,15 @@ sub _Mask {
         my %Queues = $QueueObject->QueueList(
             Valid => 0,
         );
-        %{ $Param{Data}{Queues} } = %Queues;
+
+        # get queue data
+        for my $QueueID ( keys %Queues ) {
+            my %QueueData = $QueueObject->QueueGet(
+                ID => $QueueID,
+            );
+
+            $Param{Data}{Queues}{$Queues{$QueueID}} = \%QueueData;
+        }
     }
 
     my $Output = $LayoutObject->Header();
@@ -287,15 +295,13 @@ sub _QueueShow {
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
 
-    my $InvalidCounter = 0;
-
     # check if at least 1 dynamic field is registered in the system
     if ( IsHashRefWithData( $Param{Data}{Queues} ) ) {
 
         my @QueuesAlreadyUsed;
 
         QUEUE:
-        for my $Queue ( sort values %{ $Param{Data}{Queues} } ) {
+        for my $Queue ( sort keys %{ $Param{Data}{Queues} } ) {
 
             push @QueuesAlreadyUsed, $Queue;
 

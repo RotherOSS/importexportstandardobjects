@@ -95,10 +95,7 @@
                                     [% Translate("Fields") | html %]
                                 </th>
                                 <th>[% Translate("Name") | html %]</th>
-                                <th>[% Translate("Label") | html %]</th>
-                                <th>[% Translate("Order") | html %]</th>
-                                <th>[% Translate("Type") | html %]</th>
-                                <th>[% Translate("Object") | html %]</th>
+                                <th>[% Translate("Comment") | html %]</th>
                                 <th>[% Translate("Validity") | html %]</th>
                             </tr>
                         </thead>
@@ -119,16 +116,7 @@
 [% RenderBlockEnd("Export") %]
                                 </td>
                                 <td>
-                                    <div>[% Translate(Data.Label) | html %]</div>
-                                </td>
-                                <td>
-                                    <div>[% Data.FieldOrder %]</div>
-                                </td>
-                                <td>
-                                    <div>[% Translate(Data.FieldTypeName) | html %]</div>
-                                </td>
-                                <td>
-                                    <div>[% Translate(Data.ObjectTypeName) | html %]</div>
+                                    <div>[% Translate(Data.Comment) | html %]</div>
                                 </td>
                                 <td>
                                     <div>[% Translate(Data.Valid) | html %]</div>
