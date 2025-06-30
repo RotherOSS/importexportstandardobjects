@@ -20,17 +20,14 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
-    'Kernel::System::DynamicField',
     'Kernel::System::Log',
+    'Kernel::System::Queue',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
     'Kernel::System::ZnunyHelper',
-    'Kernel::System::DateTime',
-    'Kernel::System::Queue',
 );
 
 use Kernel::System::VariableCheck qw(:all);
@@ -54,11 +51,6 @@ sub Run {
     my $YAMLObject        = $Kernel::OM->Get('Kernel::System::YAML');
     my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
     my $CacheObject       = $Kernel::OM->Get('Kernel::System::Cache');
-    my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
-
-    my %Queues = $QueueObject->QueueList(
-        Valid => 0,
-    );
 
     $Self->{Subaction} = $ParamObject->GetParam( Param => 'Subaction' ) || '';
 
@@ -140,13 +132,10 @@ sub Run {
                 push @QueuesImport, $ImportData->{Queues}{$Queue};
             }
 
-            # TODO
-            # if ($OverwriteExistingEntities) {
-            #     $ZnunyHelperObject->_DynamicFieldsCreate(@DynamicFieldsImport);
-            # }
-            # else {
-            #     $ZnunyHelperObject->_DynamicFieldsCreateIfNotExists(@DynamicFieldsImport);
-            # }
+            $Self->_ImportQueues(
+                Queues                    => \@QueuesImport,
+                OverwriteExistingEntities => $OverwriteExistingEntities,
+            );
         }
 
         # redirect to AdminQueue
@@ -182,12 +171,8 @@ sub Run {
 
         if (@Queues) {
 
-            $Data{Queues} = $ZnunyHelperObject->_DynamicFieldsConfigExport(
-                Format                => 'var',
-                IncludeInternalFields => 1,
-                IncludeAllConfigKeys  => 1,
-                DynamicFields         => \@Queues,
-                Result                => 'HASH',
+            $Data{Queues} = $Self->_ExportQueues(
+                Queues => \@Queues,
             );
         }
 
@@ -264,7 +249,7 @@ sub _Mask {
                 ID => $QueueID,
             );
 
-            $Param{Data}{Queues}{$Queues{$QueueID}} = \%QueueData;
+            $Param{Data}{Queues}{ $Queues{$QueueID} } = \%QueueData;
         }
     }
 
@@ -325,7 +310,7 @@ sub _QueueShow {
 
             my %QueueData = (
                 %{$QueueData},
-                Valid          => $Valid,
+                Valid => $Valid,
             );
 
             for my $Blocks ( 'QueuesRow', 'QueueCheckbox', $Param{Type} ) {
@@ -348,6 +333,39 @@ sub _QueueShow {
             Data => \%Param,
         );
     }
+
+    return;
+}
+
+sub _ExportQueues {
+    my ( $Self, %Param ) = @_;
+
+    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+
+    my %QueueList = $QueueObject->QueueList(
+        Valid => 0,
+    );
+
+    my %ExportData;
+    QUEUEID:
+    for my $QueueID ( sort keys %QueueList ) {
+
+        my %QueueData = $QueueObject->QueueGet(
+            ID => $QueueID,
+        );
+
+        if ( IsArrayRefWithData( $Param{Queues} ) ) {
+            next QUEUEID unless ( grep { $_ eq $QueueData{Name} } $Param{Queues}->@* );
+
+            $ExportData{ $QueueData{Name} } = \%QueueData;
+        }
+    }
+
+    return \%ExportData;
+}
+
+sub _ImportQueues {
+    my ( $Self, %Param ) = @_;
 
     return;
 }
