@@ -405,16 +405,19 @@ sub _ExportQueues {
                 my %Salutation = $SalutationObject->SalutationGet(
                     ID => $QueueData{SalutationID},
                 );
+                $QueueData{Salutation} = \%Salutation;
             }
             elsif ( $Attribute eq 'SignatureID' ) {
                 my %Signature = $SignatureObject->SignatureGet(
                     ID => $QueueData{SignatureID},
                 );
+                $QueueData{Signature} = \%Signature;
             }
             elsif ( $Attribute eq 'SystemAddressID' ) {
                 my %SystemAddress = $SystemAddressObject->SystemAddressGet(
                     ID => 1,
                 );
+                $QueueData{SystemAddress} = \%SystemAddress;
             }
         }
 
