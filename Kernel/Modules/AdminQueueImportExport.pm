@@ -19,18 +19,27 @@ package Kernel::Modules::AdminQueueImportExport;
 use strict;
 use warnings;
 
+# core modules
+use List::AllUtils qw(first);
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::VariableCheck qw(:all);
+
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
+    'Kernel::System::Group',
     'Kernel::System::Log',
     'Kernel::System::Queue',
+    'Kernel::System::Salutation',
+    'Kernel::System::Signature',
+    'Kernel::System::SystemAddress',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
-    'Kernel::System::ZnunyHelper',
 );
-
-use Kernel::System::VariableCheck qw(:all);
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -45,12 +54,11 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get objects
-    my $LogObject         = $Kernel::OM->Get('Kernel::System::Log');
-    my $LayoutObject      = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $YAMLObject        = $Kernel::OM->Get('Kernel::System::YAML');
-    my $ZnunyHelperObject = $Kernel::OM->Get('Kernel::System::ZnunyHelper');
-    my $CacheObject       = $Kernel::OM->Get('Kernel::System::Cache');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $YAMLObject   = $Kernel::OM->Get('Kernel::System::YAML');
+    my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
 
     $Self->{Subaction} = $ParamObject->GetParam( Param => 'Subaction' ) || '';
 
@@ -340,13 +348,18 @@ sub _QueueShow {
 sub _ExportQueues {
     my ( $Self, %Param ) = @_;
 
+    my %QueueFilter;
+    if ( IsArrayRefWithData( $Param{Queues} ) ) {
+        %QueueFilter = map { $_ => 1 } $Param{Queues}->@*;
+    }
+
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
     my %QueueList = $QueueObject->QueueList(
         Valid => 0,
     );
 
-    my %ExportData;
+    my @ExportData;
     QUEUEID:
     for my $QueueID ( sort keys %QueueList ) {
 
@@ -354,18 +367,68 @@ sub _ExportQueues {
             ID => $QueueID,
         );
 
-        if ( IsArrayRefWithData( $Param{Queues} ) ) {
-            next QUEUEID unless ( grep { $_ eq $QueueData{Name} } $Param{Queues}->@* );
-
-            $ExportData{ $QueueData{Name} } = \%QueueData;
+        if (%QueueFilter) {
+            next QUEUEID unless $QueueFilter{ $QueueData{Name} };
         }
+
+        # translate IDs into names or name-like identifiers
+        my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
+        my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
+        my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
+        my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+        my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
+        my %FollowUpOptions     = $QueueObject->GetFollowUpOptionList(
+            Valid => 0,
+        );
+
+        ATTRIBUTE:
+        for my $Attribute ( keys %QueueData ) {
+
+            next ATTRIBUTE unless $Attribute =~ /ID/;
+
+            if ( $Attribute eq 'ValidID' ) {
+                my $Valid = $ValidObject->ValidLookup(
+                    ValidID => $QueueData{ValidID},
+                );
+                $QueueData{Valid} = $Valid;
+            }
+            elsif ( $Attribute eq 'FollowUpID' ) {
+                $QueueData{FollowUp} = $FollowUpOptions{ $QueueData{FollowUpID} };
+            }
+            elsif ( $Attribute eq 'GroupID' ) {
+                my $Group = $GroupObject->GroupLookup(
+                    GroupID => $QueueData{GroupID},
+                );
+                $QueueData{Group} = $Group;
+            }
+            elsif ( $Attribute eq 'SalutationID' ) {
+                my %Salutation = $SalutationObject->SalutationGet(
+                    ID => $QueueData{SalutationID},
+                );
+            }
+            elsif ( $Attribute eq 'SignatureID' ) {
+                my %Signature = $SignatureObject->SignatureGet(
+                    ID => $QueueData{SignatureID},
+                );
+            }
+            elsif ( $Attribute eq 'SystemAddressID' ) {
+                my %SystemAddress = $SystemAddressObject->SystemAddressGet(
+                    ID => 1,
+                );
+            }
+        }
+
+        push @ExportData, \%QueueData;
     }
 
-    return \%ExportData;
+    return \@ExportData;
 }
 
 sub _ImportQueues {
     my ( $Self, %Param ) = @_;
+
+    # NOTE
+    #   sorting not important as parent queue is not checked anywhere despite in the AdminQueue frontend module
 
     return;
 }
