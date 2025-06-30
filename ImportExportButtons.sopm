@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otobo_package version="1.0">
     <Name>ImportExportButtons</Name>
-    <Version>11.0.0</Version>
+    <Version>0.0.0</Version>
     <Framework>11.0.x</Framework>
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://otobo.io/</URL>
@@ -10,6 +10,7 @@
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
+        <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
     </Filelist>
