@@ -434,7 +434,7 @@ sub _ImportQueues {
     my ( $Self, %Param ) = @_;
 
     my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+    my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
     my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
     my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
     my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
@@ -443,18 +443,18 @@ sub _ImportQueues {
         Valid => 0,
     );
     my %FollowUpOptionLookup = reverse %FollowUpOptionList;
-    my %QueueList   = $QueueObject->QueueList(
+    my %QueueList            = $QueueObject->QueueList(
         Valid => 0,
     );
-    my %QueueLookup = reverse %QueueList;
+    my %QueueLookup    = reverse %QueueList;
     my %SalutationList = $SalutationObject->SalutationList(
         Valid => 0,
     );
     my %SalutationLookup = reverse %SalutationList;
-    my %SignatureList = $SignatureObject->SignatureList(
+    my %SignatureList    = $SignatureObject->SignatureList(
         Valid => 0,
     );
-    my %SignatureLookup = reverse %SignatureList;
+    my %SignatureLookup   = reverse %SignatureList;
     my %SystemAddressList = $SystemAddressObject->SystemAddressList(
         Valid => 0,
     );
@@ -476,7 +476,7 @@ sub _ImportQueues {
             my %Salutation = $QueueData->{Salutation}->%*;
 
             # check if salutation already exists
-            my $SalutationID = $SalutationLookup{$Salutation{Name}};
+            my $SalutationID = $SalutationLookup{ $Salutation{Name} };
 
             if ( $SalutationID && $Param{OverwriteExistingEntities} ) {
                 my $Success = $SalutationObject->SalutationUpdate(
@@ -496,7 +496,7 @@ sub _ImportQueues {
             my %Signature = $QueueData->{Signature}->%*;
 
             # check if salutation already exists
-            my $SignatureID = $SignatureLookup{$Signature{Name}};
+            my $SignatureID = $SignatureLookup{ $Signature{Name} };
 
             if ( $SignatureID && $Param{OverwriteExistingEntities} ) {
                 my $Success = $SignatureObject->SignatureUpdate(
@@ -515,12 +515,12 @@ sub _ImportQueues {
         if ( $QueueData->{SystemAddress} ) {
             my %SystemAddress = $QueueData->{SystemAddress}->%*;
 
-            my $SystemAddressID = $SystemAddressLookup{$SystemAddress{Name}};
+            my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
 
             if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
                 my $Success = $SystemAddressObject->SystemAddressUpdate(
                     %SystemAddress,
-                    ID => $SystemAddressLookup{$SystemAddress{Name}},
+                    ID     => $SystemAddressLookup{ $SystemAddress{Name} },
                     UserID => $Self->{UserID},
                 );
             }
@@ -533,8 +533,8 @@ sub _ImportQueues {
         }
 
         # translate named data back to IDs
-        $QueueData->{FollowUpID} = $FollowUpOptionLookup{$QueueData->{FollowUp}};
-        $QueueData->{GroupID} = $GroupObject->GroupLookup(
+        $QueueData->{FollowUpID} = $FollowUpOptionLookup{ $QueueData->{FollowUp} };
+        $QueueData->{GroupID}    = $GroupObject->GroupLookup(
             Group => $QueueData->{Group},
         );
         $QueueData->{ValidID} = $ValidObject->ValidLookup(
