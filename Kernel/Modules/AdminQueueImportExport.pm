@@ -245,6 +245,8 @@ sub _Mask {
 
     if ( !$Param{Data} ) {
 
+        $Param{Data}{Queues} = [];
+
         # export
         my %Queues = $QueueObject->QueueList(
             Valid => 0,
@@ -256,7 +258,7 @@ sub _Mask {
                 ID => $QueueID,
             );
 
-            $Param{Data}{Queues}{ $Queues{$QueueID} } = \%QueueData;
+            push $Param{Data}{Queues}->@*, \%QueueData;
         }
     }
 
