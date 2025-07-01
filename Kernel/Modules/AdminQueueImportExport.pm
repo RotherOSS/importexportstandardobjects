@@ -382,35 +382,47 @@ sub _ExportQueues {
                     ValidID => $QueueData{ValidID},
                 );
                 $QueueData{Valid} = $Valid;
+                delete $QueueData{ValidID};
             }
             elsif ( $Attribute eq 'FollowUpID' ) {
                 $QueueData{FollowUp} = $FollowUpOptions{ $QueueData{FollowUpID} };
+                delete $QueueData{FollowUpID};
             }
             elsif ( $Attribute eq 'GroupID' ) {
                 my $Group = $GroupObject->GroupLookup(
                     GroupID => $QueueData{GroupID},
                 );
                 $QueueData{Group} = $Group;
+                delete $QueueData{GroupID};
             }
             elsif ( $Attribute eq 'SalutationID' ) {
                 my %Salutation = $SalutationObject->SalutationGet(
                     ID => $QueueData{SalutationID},
                 );
                 $QueueData{Salutation} = \%Salutation;
+                delete $QueueData{SalutationID};
             }
             elsif ( $Attribute eq 'SignatureID' ) {
                 my %Signature = $SignatureObject->SignatureGet(
                     ID => $QueueData{SignatureID},
                 );
                 $QueueData{Signature} = \%Signature;
+                delete $QueueData{SignatureID};
             }
             elsif ( $Attribute eq 'SystemAddressID' ) {
                 my %SystemAddress = $SystemAddressObject->SystemAddressGet(
                     ID => 1,
                 );
                 $QueueData{SystemAddress} = \%SystemAddress;
+                delete $QueueData{SystemAddressID};
             }
         }
+
+        delete $QueueData{ChangeTime};
+        delete $QueueData{CreateTime};
+        delete $QueueData{Email};
+        delete $QueueData{QueueID};
+        delete $QueueData{Realname};
 
         push @ExportData, \%QueueData;
     }
