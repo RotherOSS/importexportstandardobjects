@@ -8,11 +8,16 @@
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
     <Description Lang="en">..</Description>
     <Filelist>
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminGroup.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
+        <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.GroupImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.QueueImportExport.js" />
     </Filelist>
 </otobo_package>
