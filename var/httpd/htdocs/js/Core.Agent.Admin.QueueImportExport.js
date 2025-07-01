@@ -1,7 +1,7 @@
 // --
 // OTOBO is a web-based ticketing system for service organisations.
 // --
-// Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
+// Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 // Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 // --
 // This program is free software: you can redistribute it and/or modify it under
@@ -16,20 +16,33 @@
 
 "use strict";
 
-var Core = Core || {};
-Core.Agent = Core.Agent || {};
+var Core         = Core             || {};
+Core.Agent       = Core.Agent       || {};
 Core.Agent.Admin = Core.Agent.Admin || {};
 
 /**
-* @namespace Core.Agent.Admin.QueueImportExport
-* @memberof Core.Agent.Admin
-* @author
-* @description
-*      [description_placeholder]
-*/
+ * @namespace
+ * @exports TargetNS as Core.Agent.Admin.QueueImportExport
+ * @description
+ *      This namespace contains the special module functions for the Queue ImportExport module.
+ */
 Core.Agent.Admin.QueueImportExport = (function (TargetNS) {
 
-    Core.Init.RegisterNamespace(TargetNS, 'APP_MODULE');
+    TargetNS.Init = function () {
+
+        $.each(['Queues'], function (Index, Elements) {
+
+            $('input[type="checkbox"][name="SelectAll'+Elements+'"]').bind('click', function () {
+
+                Core.Form.SelectAllCheckboxes($(this), $('[name="'+Elements+'"]'));
+
+            });
+        });
+
+    };
 
     return TargetNS;
+
 }(Core.Agent.Admin.QueueImportExport || {}));
+
+Core.Agent.Admin.QueueImportExport.Init();

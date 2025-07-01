@@ -31,7 +31,7 @@
                 <Hash>
                     <Item Key="JavaScript">
                         <Array>
-                            <Item>Core.Agent.Admin.Znuny4OTOBODynamicFieldImportExport.js</Item>
+                            <Item>Core.Agent.Admin.QueueImportExport.js</Item>
                         </Array>
                     </Item>
                 </Hash>
