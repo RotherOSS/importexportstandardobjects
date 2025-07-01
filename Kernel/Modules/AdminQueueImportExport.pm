@@ -28,6 +28,7 @@ use List::AllUtils qw(first);
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::Group',
@@ -495,11 +496,32 @@ sub _ImportQueues {
     );
     my %SystemAddressLookup = reverse %SystemAddressList;
 
-    # NOTE
-    #   sorting not important as parent queue is not checked anywhere despite in the AdminQueue frontend module
     QUEUEINDEX:
     for my $QueueIndex ( 0 .. $#{ $Param{Queues} } ) {
         my $QueueData = $Param{Queues}[$QueueIndex];
+
+        # in case of child queue, check if all parent queues are present
+        #   either in the system or in the import data
+        my @NameElements = split( /::/, $QueueData->{Name} );
+
+        # check if queue levels conform to system configuration
+        my $MaxQueueLevel = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::MaxQueueLevel');
+        if ( scalar @NameElements > $MaxQueueLevel ) {
+            next QUEUEINDEX;
+        }
+
+        if ( scalar @NameElements > 1 ) {
+            my $NameStrg = '';
+            for my $Index ( 0 .. $#NameElements - 1 ) {
+                $NameStrg .= $NameElements[$Index];
+
+                if ( !$QueueLookup{$NameStrg} && !$Param{Queues}{$NameStrg} ) {
+
+                    # parent element not found, skipping
+                    next QUEUEINDEX;
+                }
+            }
+        }
 
         my $QueueID = $QueueLookup{ $QueueData->{Name} };
 
