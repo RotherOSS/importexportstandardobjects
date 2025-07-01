@@ -101,7 +101,7 @@
                         </thead>
                         <tbody>
 [% RenderBlockStart("QueuesRow") %]
-                            <tr id="QueueID_[% Data.ID | html %]">
+                            <tr id="QueueID_[% Data.QueueID | html %]">
                                 <td class='Center'>
 [% RenderBlockStart("QueueCheckbox") %]
                                     <input type="checkbox" id="Queues" name="Queues" value="[% Data.Name | html %]" checked />
@@ -112,7 +112,7 @@
                                     [% Data.Name %]
 [% RenderBlockEnd("Import") %]
 [% RenderBlockStart("Export") %]
-                                    <a href="[% Env("Baselink") %]Action=[% Data.ConfigDialog | uri %];Subaction=Change;ObjectType=[% Data.ObjectType | uri %];FieldType=[% Data.FieldType | uri %];ID=[% Data.ID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
+                                    <a href="[% Env("Baselink") %]Action=[% Data.ConfigDialog | uri %];Subaction=Change;ObjectType=[% Data.ObjectType | uri %];FieldType=[% Data.FieldType | uri %];ID=[% Data.QueueID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
 [% RenderBlockEnd("Export") %]
                                 </td>
                                 <td>
