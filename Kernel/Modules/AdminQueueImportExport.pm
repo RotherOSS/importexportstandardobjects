@@ -421,11 +421,32 @@ sub _ExportQueues {
 sub _ImportQueues {
     my ( $Self, %Param ) = @_;
 
+    my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+    my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
+    my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
+    my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+    my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
+    my %FollowUpOptionList  = $QueueObject->GetFollowUpOptionList(
+        Valid => 0,
+    );
+    my %FollowUpOptionLookup = reverse %FollowUpOptionList;
     my %QueueList   = $QueueObject->QueueList(
         Valid => 0,
     );
     my %QueueLookup = reverse %QueueList;
+    my %SalutationList = $SalutationObject->SalutationList(
+        Valid => 0,
+    );
+    my %SalutationLookup = reverse %SalutationList;
+    my %SignatureList = $SignatureObject->SignatureList(
+        Valid => 0,
+    );
+    my %SignatureLookup = reverse %SignatureList;
+    my %SystemAddressList = $SystemAddressObject->SystemAddressList(
+        Valid => 0,
+    );
+    my %SystemAddressLookup = reverse %SystemAddressList;
 
     # NOTE
     #   sorting not important as parent queue is not checked anywhere despite in the AdminQueue frontend module
@@ -437,6 +458,76 @@ sub _ImportQueues {
 
         # skip if queue with same name exists and overwrite is not set
         next QUEUEINDEX if ( !$Param{OverwriteExistingEntities} && $QueueID );
+
+        # create or update necessary previous objects
+        if ( $QueueData->{Salutation} ) {
+            my %Salutation = $QueueData->{Salutation}->%*;
+
+            # check if salutation already exists
+            my $SalutationID = $SalutationLookup{$Salutation{Name}};
+
+            if ( $SalutationID && $Param{OverwriteExistingEntities} ) {
+                my $Success = $SalutationObject->SalutationUpdate(
+                    %Salutation,
+                    ID     => $SalutationID,
+                    UserID => $Self->{UserID},
+                );
+            }
+            elsif ( !$SalutationID ) {
+                my $SalutationID => $SalutationObject->SalutationAdd(
+                    %Salutation,
+                    UserID => $Self->{UserID},
+                );
+            }
+        }
+        if ( $QueueData->{Signature} ) {
+            my %Signature = $QueueData->{Signature}->%*;
+
+            # check if salutation already exists
+            my $SignatureID = $SignatureLookup{$Signature{Name}};
+
+            if ( $SignatureID && $Param{OverwriteExistingEntities} ) {
+                my $Success = $SignatureObject->SignatureUpdate(
+                    %Signature,
+                    ID     => $SignatureID,
+                    UserID => $Self->{UserID},
+                );
+            }
+            elsif ( !$SignatureID ) {
+                my $SignatureID => $SignatureObject->SignatureAdd(
+                    %Signature,
+                    UserID => $Self->{UserID},
+                );
+            }
+        }
+        if ( $QueueData->{SystemAddress} ) {
+            my %SystemAddress = $QueueData->{SystemAddress}->%*;
+
+            my $SystemAddressID = $SystemAddressLookup{$SystemAddress{Name}};
+
+            if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
+                my $Success = $SystemAddressObject->SystemAddressUpdate(
+                    %SystemAddress,
+                    ID => $SystemAddressLookup{$SystemAddress{Name}},
+                    UserID => $Self->{UserID},
+                );
+            }
+            elsif ( !$SystemAddressID ) {
+                my $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
+                    %SystemAddress,
+                    UserID => $Self->{UserID},
+                );
+            }
+        }
+
+        # translate named data back to IDs
+        $QueueData->{FollowUpID} = $FollowUpOptionLookup{$QueueData->{FollowUp}};
+        $QueueData->{GroupID} = $GroupObject->GroupLookup(
+            Group => $QueueData->{Group},
+        );
+        $QueueData->{ValidID} = $ValidObject->ValidLookup(
+            Valid => $QueueData->{Valid},
+        );
 
         if ($QueueID) {
             my $Success = $QueueObject->QueueUpdate(
