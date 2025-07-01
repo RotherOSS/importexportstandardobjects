@@ -126,22 +126,22 @@ sub Run {
         # ------------------------------------------------------------ #
         # Import Queues
         # ------------------------------------------------------------ #
-        if ( IsArrayRefWithData( $ImportData->{Queues} ) ) {
+        if ( IsHashRefWithData( $ImportData->{Queues} ) ) {
 
-            my @QueuesImport;
-            QUEUEINDEX:
-            for my $QueueIndex ( 0 .. $#{ $ImportData->{Queues} } ) {
+            my %QueuesImport;
+            QUEUENAME:
+            for my $QueueName ( keys $ImportData->{Queues}->%* ) {
 
-                my $Selected = grep { $ImportData->{Queues}[$QueueIndex]{Name} eq $_ } @QueuesSelected;
-                next QUEUE if !$Selected;
+                my $Selected = grep { $QueueName eq $_ } @QueuesSelected;
+                next QUEUENAME if !$Selected;
 
-                next QUEUE if !IsHashRefWithData( $ImportData->{Queues}[$QueueIndex] );
+                next QUEUENAME if !IsHashRefWithData( $ImportData->{Queues}{$QueueName} );
 
-                push @QueuesImport, $ImportData->{Queues}[$QueueIndex];
+                $QueuesImport{$QueueName} = $ImportData->{Queues}{$QueueName};
             }
 
             $Self->_ImportQueues(
-                Queues                    => \@QueuesImport,
+                Queues                    => \%QueuesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
             );
         }
@@ -246,7 +246,7 @@ sub _Mask {
 
     if ( !$Param{Data} ) {
 
-        $Param{Data}{Queues} = [];
+        $Param{Data}{Queues} = {};
 
         # export
         my %Queues = $QueueObject->QueueList(
@@ -259,7 +259,7 @@ sub _Mask {
                 ID => $QueueID,
             );
 
-            push $Param{Data}{Queues}->@*, \%QueueData;
+            $Param{Data}{Queues}{ $QueueData{Name} } = \%QueueData;
         }
     }
 
@@ -290,18 +290,18 @@ sub _QueueShow {
     my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
     # check if at least 1 dynamic field is registered in the system
-    if ( IsArrayRefWithData( $Param{Data}{Queues} ) ) {
+    if ( IsHashRefWithData( $Param{Data}{Queues} ) ) {
 
         my @QueuesAlreadyUsed;
 
-        QUEUEINDEX:
-        for my $QueueIndex ( 0 .. $#{ $Param{Data}{Queues} } ) {
+        QUEUENAME:
+        for my $QueueName ( keys $Param{Data}{Queues}->%* ) {
 
-            my $QueueData = $Param{Data}{Queues}[$QueueIndex];
+            my $QueueData = $Param{Data}{Queues}{$QueueName};
 
             push @QueuesAlreadyUsed, $QueueData->{Name};
 
-            next QUEUE if !IsHashRefWithData($QueueData);
+            next QUEUENAME if !IsHashRefWithData($QueueData);
 
             # convert ValidID to Validity string
             my $Valid = $QueueData->{Valid} || $ValidObject->ValidLookup(
@@ -351,7 +351,7 @@ sub _ExportQueues {
         Valid => 0,
     );
 
-    my @ExportData;
+    my %ExportData;
     QUEUEID:
     for my $QueueID ( sort keys %QueueList ) {
 
@@ -460,10 +460,10 @@ sub _ExportQueues {
         delete $QueueData{QueueID};
         delete $QueueData{Realname};
 
-        push @ExportData, \%QueueData;
+        $ExportData{ $QueueData{Name} } = \%QueueData;
     }
 
-    return \@ExportData;
+    return \%ExportData;
 }
 
 sub _ImportQueues {
@@ -496,9 +496,9 @@ sub _ImportQueues {
     );
     my %SystemAddressLookup = reverse %SystemAddressList;
 
-    QUEUEINDEX:
-    for my $QueueIndex ( 0 .. $#{ $Param{Queues} } ) {
-        my $QueueData = $Param{Queues}[$QueueIndex];
+    QUEUENAME:
+    for my $QueueName ( keys $Param{Queues}->%* ) {
+        my $QueueData = $Param{Queues}{$QueueName};
 
         # in case of child queue, check if all parent queues are present
         #   either in the system or in the import data
@@ -507,7 +507,7 @@ sub _ImportQueues {
         # check if queue levels conform to system configuration
         my $MaxQueueLevel = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::MaxQueueLevel');
         if ( scalar @NameElements > $MaxQueueLevel ) {
-            next QUEUEINDEX;
+            next QUEUENAME;
         }
 
         if ( scalar @NameElements > 1 ) {
@@ -518,7 +518,7 @@ sub _ImportQueues {
                 if ( !$QueueLookup{$NameStrg} && !$Param{Queues}{$NameStrg} ) {
 
                     # parent element not found, skipping
-                    next QUEUEINDEX;
+                    next QUEUENAME;
                 }
             }
         }
@@ -526,7 +526,7 @@ sub _ImportQueues {
         my $QueueID = $QueueLookup{ $QueueData->{Name} };
 
         # skip if queue with same name exists and overwrite is not set
-        next QUEUEINDEX if ( !$Param{OverwriteExistingEntities} && $QueueID );
+        next QUEUENAME if ( !$Param{OverwriteExistingEntities} && $QueueID );
 
         # create or update necessary previous objects
         if ( $QueueData->{Salutation} ) {
@@ -547,7 +547,7 @@ sub _ImportQueues {
                     UserID => $Self->{UserID},
                 );
 
-                next QUEUEINDEX unless $Success;
+                next QUEUENAME unless $Success;
             }
             elsif ( !$SalutationID ) {
                 $SalutationID = $SalutationObject->SalutationAdd(
@@ -575,7 +575,7 @@ sub _ImportQueues {
                     UserID => $Self->{UserID},
                 );
 
-                next QUEUEINDEX unless $Success;
+                next QUEUENAME unless $Success;
             }
             elsif ( !$SignatureID ) {
                 $SignatureID = $SignatureObject->SignatureAdd(
@@ -620,7 +620,7 @@ sub _ImportQueues {
                         UserID => $Self->{UserID},
                     );
 
-                    next QUEUEINDEX unless $Success;
+                    next QUEUENAME unless $Success;
                 }
                 elsif ( !$SystemAddressID ) {
                     $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
@@ -636,14 +636,14 @@ sub _ImportQueues {
                 QueueID => $QueueID,
                 UserID  => $Self->{UserID},
             );
-            next QUEUEINDEX unless $Success;
+            next QUEUENAME unless $Success;
         }
         else {
             my $QueueID = $QueueObject->QueueAdd(
                 $QueueData->%*,
                 UserID => $Self->{UserID},
             );
-            next QUEUEINDEX unless $QueueID;
+            next QUEUENAME unless $QueueID;
 
             # system address needs QueueID as attribute
             if ( $QueueData->{SystemAddress} ) {
@@ -668,7 +668,7 @@ sub _ImportQueues {
                         UserID => $Self->{UserID},
                     );
 
-                    next QUEUEINDEX unless $Success;
+                    next QUEUENAME unless $Success;
                 }
                 elsif ( !$SystemAddressID ) {
                     $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
@@ -684,7 +684,7 @@ sub _ImportQueues {
                     SystemAddressID => $SystemAddressID,
                     UserID          => $Self->{UserID},
                 );
-                next QUEUEINDEX unless $Success;
+                next QUEUENAME unless $Success;
             }
         }
     }
