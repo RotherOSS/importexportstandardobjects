@@ -303,7 +303,7 @@ sub _QueueShow {
             next QUEUE if !IsHashRefWithData($QueueData);
 
             # convert ValidID to Validity string
-            my $Valid = $ValidObject->ValidLookup(
+            my $Valid = $QueueData->{Valid} || $ValidObject->ValidLookup(
                 ValidID => $QueueData->{ValidID},
             );
 
@@ -399,6 +399,17 @@ sub _ExportQueues {
                 my %Salutation = $SalutationObject->SalutationGet(
                     ID => $QueueData{SalutationID},
                 );
+
+                # transform IDs into names and clean up unnecessary attributes
+                $Salutation{Valid} = $ValidObject->ValidLookup(
+                    ValidID => $Salutation{ValidID},
+                );
+                delete $Salutation{ValidID};
+
+                delete $Salutation{ChangeTime};
+                delete $Salutation{CreateTime};
+                delete $Salutation{ID};
+
                 $QueueData{Salutation} = \%Salutation;
                 delete $QueueData{SalutationID};
             }
@@ -406,6 +417,17 @@ sub _ExportQueues {
                 my %Signature = $SignatureObject->SignatureGet(
                     ID => $QueueData{SignatureID},
                 );
+
+                # transform IDs into names and clean up unnecessary attributes
+                $Signature{Valid} = $ValidObject->ValidLookup(
+                    ValidID => $Signature{ValidID},
+                );
+                delete $Signature{ValidID};
+
+                delete $Signature{ChangeTime};
+                delete $Signature{CreateTime};
+                delete $Signature{ID};
+
                 $QueueData{Signature} = \%Signature;
                 delete $QueueData{SignatureID};
             }
@@ -413,6 +435,19 @@ sub _ExportQueues {
                 my %SystemAddress = $SystemAddressObject->SystemAddressGet(
                     ID => 1,
                 );
+
+                # transform IDs into names and clean up unnecessary attributes
+                $SystemAddress{Valid} = $ValidObject->ValidLookup(
+                    ValidID => $SystemAddress{ValidID},
+                );
+                delete $SystemAddress{ValidID};
+                $SystemAddress{Queue} = $QueueList{ $SystemAddress{QueueID} };
+                delete $SystemAddress{QueueID};
+
+                delete $SystemAddress{ChangeTime};
+                delete $SystemAddress{CreateTime};
+                delete $SystemAddress{ID};
+
                 $QueueData{SystemAddress} = \%SystemAddress;
                 delete $QueueData{SystemAddressID};
             }
@@ -475,6 +510,11 @@ sub _ImportQueues {
         if ( $QueueData->{Salutation} ) {
             my %Salutation = $QueueData->{Salutation}->%*;
 
+            # transform names back to IDs where necessary
+            $Salutation{ValidID} = $ValidObject->ValidLookup(
+                Valid => $Salutation{Valid},
+            );
+
             # check if salutation already exists
             my $SalutationID = $SalutationLookup{ $Salutation{Name} };
 
@@ -495,6 +535,11 @@ sub _ImportQueues {
         if ( $QueueData->{Signature} ) {
             my %Signature = $QueueData->{Signature}->%*;
 
+            # transform names back to IDs where necessary
+            $Signature{ValidID} = $ValidObject->ValidLookup(
+                Valid => $Signature{Valid},
+            );
+
             # check if salutation already exists
             my $SignatureID = $SignatureLookup{ $Signature{Name} };
 
@@ -508,25 +553,6 @@ sub _ImportQueues {
             elsif ( !$SignatureID ) {
                 my $SignatureID => $SignatureObject->SignatureAdd(
                     %Signature,
-                    UserID => $Self->{UserID},
-                );
-            }
-        }
-        if ( $QueueData->{SystemAddress} ) {
-            my %SystemAddress = $QueueData->{SystemAddress}->%*;
-
-            my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
-
-            if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
-                my $Success = $SystemAddressObject->SystemAddressUpdate(
-                    %SystemAddress,
-                    ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                    UserID => $Self->{UserID},
-                );
-            }
-            elsif ( !$SystemAddressID ) {
-                my $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
-                    %SystemAddress,
                     UserID => $Self->{UserID},
                 );
             }
@@ -555,6 +581,37 @@ sub _ImportQueues {
                 UserID => $Self->{UserID},
             );
             next QUEUEINDEX unless $QueueID;
+        }
+
+        # system address needs QueueID as attribute
+        if ( $QueueData->{SystemAddress} ) {
+            my %SystemAddress = $QueueData->{SystemAddress}->%*;
+
+            # transform names back to IDs where necessary
+            $SystemAddress{ValidID} = $ValidObject->ValidLookup(
+                Valid => $SystemAddress{Valid},
+            );
+
+            # TODO use $QueueID instead...?
+            $SystemAddress{QueueID} = $QueueObject->QueueLookup(
+                Queue => $SystemAddress{Queue},
+            );
+
+            my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
+
+            if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
+                my $Success = $SystemAddressObject->SystemAddressUpdate(
+                    %SystemAddress,
+                    ID     => $SystemAddressLookup{ $SystemAddress{Name} },
+                    UserID => $Self->{UserID},
+                );
+            }
+            elsif ( !$SystemAddressID ) {
+                my $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
+                    %SystemAddress,
+                    UserID => $Self->{UserID},
+                );
+            }
         }
     }
 
