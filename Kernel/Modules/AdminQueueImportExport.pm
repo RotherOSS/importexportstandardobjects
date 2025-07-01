@@ -433,7 +433,7 @@ sub _ExportQueues {
             }
             elsif ( $Attribute eq 'SystemAddressID' ) {
                 my %SystemAddress = $SystemAddressObject->SystemAddressGet(
-                    ID => 1,
+                    ID => $QueueData{SystemAddressID},
                 );
 
                 # transform IDs into names and clean up unnecessary attributes
@@ -654,6 +654,15 @@ sub _ImportQueues {
                         UserID => $Self->{UserID},
                     );
                 }
+
+                # update queue and set system address id
+                my $Success = $QueueObject->QueueUpdate(
+                    $QueueData->%*,
+                    QueueID         => $QueueID,
+                    SystemAddressID => $SystemAddressID,
+                    UserID          => $Self->{UserID},
+                );
+                next QUEUEINDEX unless $Success;
             }
         }
     }
