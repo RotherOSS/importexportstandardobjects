@@ -19,6 +19,7 @@
         <File Permission="660" Location="Kernel/Autoload/GenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/GroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/QueueImportExport.pm" />
+        <File Permission="660" Location="Kernel/Autoload/RoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />

@@ -167,4 +167,13 @@
             </Hash>
         </Value>
     </Setting>
+    <Setting Name="AutoloadPerlPackages###003-RoleImportExport" Required="0" Valid="1">
+        <Description Translatable="1">Autoload configuration for Role import and export functions.</Description>
+        <Navigation>Core::Autoload</Navigation>
+        <Value>
+            <Array>
+                <Item ValueType="String">Kernel::Autoload::RoleImportExport</Item>
+            </Array>
+        </Value>
+    </Setting>
 </otobo_config>

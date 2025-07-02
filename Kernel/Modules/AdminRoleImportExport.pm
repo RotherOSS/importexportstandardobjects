@@ -28,11 +28,9 @@ use List::AllUtils qw(first);
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
-    'Kernel::Config',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::Group',
-    'Kernel::System::Log',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
@@ -52,6 +50,7 @@ sub Run {
 
     # get objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $YAMLObject   = $Kernel::OM->Get('Kernel::System::YAML');
     my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
@@ -136,7 +135,7 @@ sub Run {
                 $RolesImport{$RoleName} = $ImportData->{Roles}{$RoleName};
             }
 
-            $Self->_ImportRoles(
+            $GroupObject->ImportRoles(
                 Roles                     => \%RolesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
             );
@@ -175,7 +174,7 @@ sub Run {
 
         if (@Roles) {
 
-            $Data{Roles} = $Self->_ExportRoles(
+            $Data{Roles} = $GroupObject->ExportRoles(
                 Roles => \@Roles,
             );
         }
@@ -327,105 +326,6 @@ sub _RoleShow {
             Name => 'NoDataFound',
             Data => \%Param,
         );
-    }
-
-    return;
-}
-
-sub _ExportRoles {
-    my ( $Self, %Param ) = @_;
-
-    my %RoleFilter;
-    if ( IsArrayRefWithData( $Param{Roles} ) ) {
-        %RoleFilter = map { $_ => 1 } $Param{Roles}->@*;
-    }
-
-    my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
-
-    my %RoleList = $GroupObject->RoleList(
-        Valid => 0,
-    );
-
-    my %ExportData;
-    ROLEID:
-    for my $RoleID ( sort keys %RoleList ) {
-
-        my %RoleData = $GroupObject->RoleGet(
-            ID => $RoleID,
-        );
-
-        if (%RoleFilter) {
-            next ROLEID unless $RoleFilter{ $RoleData{Name} };
-        }
-
-        # translate IDs into names or name-like identifiers
-        my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-
-        ATTRIBUTE:
-        for my $Attribute ( keys %RoleData ) {
-
-            next ATTRIBUTE unless $Attribute =~ /ID/;
-
-            if ( $Attribute eq 'ValidID' ) {
-                my $Valid = $ValidObject->ValidLookup(
-                    ValidID => $RoleData{ValidID},
-                );
-                $RoleData{Valid} = $Valid;
-                delete $RoleData{ValidID};
-            }
-        }
-
-        delete $RoleData{ChangeBy};
-        delete $RoleData{ChangeTime};
-        delete $RoleData{CreateBy};
-        delete $RoleData{CreateTime};
-        delete $RoleData{ID};
-
-        $ExportData{ $RoleData{Name} } = \%RoleData;
-    }
-
-    return \%ExportData;
-}
-
-sub _ImportRoles {
-    my ( $Self, %Param ) = @_;
-
-    my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
-    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-    my %RoleList    = $GroupObject->RoleList(
-        Valid => 0,
-    );
-    my %RoleLookup = reverse %RoleList;
-
-    ROLENAME:
-    for my $RoleName ( keys $Param{Roles}->%* ) {
-        my $RoleData = $Param{Roles}{$RoleName};
-
-        my $RoleID = $RoleLookup{ $RoleData->{Name} };
-
-        # skip if role with same name exists and overwrite is not set
-        next ROLENAME if ( !$Param{OverwriteExistingEntities} && $RoleID );
-
-        # translate named data back to IDs
-        $RoleData->{ValidID} = $ValidObject->ValidLookup(
-            Valid => $RoleData->{Valid},
-        );
-
-        if ($RoleID) {
-            my $Success = $GroupObject->RoleUpdate(
-                $RoleData->%*,
-                ID     => $RoleID,
-                UserID => $Self->{UserID},
-            );
-            next ROLENAME unless $Success;
-        }
-        else {
-            my $RoleID = $GroupObject->RoleAdd(
-                $RoleData->%*,
-                UserID => $Self->{UserID},
-            );
-            next ROLENAME unless $RoleID;
-        }
     }
 
     return;
