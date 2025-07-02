@@ -37,6 +37,7 @@ our @ObjectDependencies = (
     'Kernel::System::Priority',
     'Kernel::System::Queue',
     'Kernel::System::State',
+    'Kernel::System::User',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
@@ -346,6 +347,7 @@ sub _ExportGenericAgents {
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
     my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
 
     my %GenericAgentList = $GenericAgentObject->JobList();
@@ -392,6 +394,14 @@ sub _ExportGenericAgents {
                     delete $GenericAgentData{NewLockID};
                 }
             }
+            elsif ( $Attribute eq 'NewOwnerID' ) {
+                if ( $GenericAgentData{NewOwnerID} ) {
+                    $GenericAgentData{NewOwner} = $UserObject->UserLookup(
+                        UserID => $GenericAgentData{NewOwnerID},
+                    );
+                    delete $GenericAgentData{NewOwnerID};
+                }
+            }
             elsif ( $Attribute eq 'NewPriorityID' ) {
                 if ( $GenericAgentData{NewPriorityID} ) {
                     $GenericAgentData{NewPriority} = $PriorityObject->PriorityLookup(
@@ -414,6 +424,18 @@ sub _ExportGenericAgents {
                         StateID => $GenericAgentData{NewStateID},
                     );
                     delete $GenericAgentData{NewStateID};
+                }
+            }
+            elsif ( $Attribute eq 'OwnerIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{OwnerIDs} ) ) {
+                    my @Owners;
+                    for my $OwnerID ( $GenericAgentData{OwnerIDs}->@* ) {
+                        push @Owners, $UserObject->UserLookup(
+                            UserID => $OwnerID,
+                        );
+                    }
+                    $GenericAgentData{Owners} = \@Owners;
+                    delete $GenericAgentData{OwnerIDs};
                 }
             }
             elsif ( $Attribute eq 'PriorityIDs' ) {
