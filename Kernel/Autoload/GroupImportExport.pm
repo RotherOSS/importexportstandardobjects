@@ -30,7 +30,7 @@ our @ObjectDependencies = (
     'Kernel::System::Valid',
 );
 
-sub _ExportGroups {
+sub ExportGroups {
     my ( $Self, %Param ) = @_;
 
     my %GroupFilter;
@@ -85,7 +85,7 @@ sub _ExportGroups {
     return \%ExportData;
 }
 
-sub _ImportGroups {
+sub ImportGroups {
     my ( $Self, %Param ) = @_;
 
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
