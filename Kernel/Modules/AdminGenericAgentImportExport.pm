@@ -36,7 +36,10 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::Priority',
     'Kernel::System::Queue',
+    'Kernel::System::Service',
+    'Kernel::System::SLA',
     'Kernel::System::State',
+    'Kernel::System::Type',
     'Kernel::System::User',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
@@ -346,7 +349,10 @@ sub _ExportGenericAgents {
     my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
     my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+    my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
 
@@ -418,12 +424,36 @@ sub _ExportGenericAgents {
                     delete $GenericAgentData{NewQueueID};
                 }
             }
+            elsif ( $Attribute eq 'NewServiceID' ) {
+                if ( $GenericAgentData{NewServiceID} ) {
+                    $GenericAgentData{NewService} = $ServiceObject->ServiceLookup(
+                        ServiceID => $GenericAgentData{NewServiceID},
+                    );
+                    delete $GenericAgentData{NewServiceID};
+                }
+            }
+            elsif ( $Attribute eq 'NewSLAID' ) {
+                if ( $GenericAgentData{NewSLAID} ) {
+                    $GenericAgentData{NewSLA} = $SLAObject->SLALookup(
+                        SLAID => $GenericAgentData{NewSLAID},
+                    );
+                    delete $GenericAgentData{NewSLAID};
+                }
+            }
             elsif ( $Attribute eq 'NewStateID' ) {
                 if ( $GenericAgentData{NewStateID} ) {
                     $GenericAgentData{NewState} = $StateObject->StateLookup(
                         StateID => $GenericAgentData{NewStateID},
                     );
                     delete $GenericAgentData{NewStateID};
+                }
+            }
+            elsif ( $Attribute eq 'NewTypeID' ) {
+                if ( $GenericAgentData{NewTypeID} ) {
+                    $GenericAgentData{NewType} = $TypeObject->TypeLookup(
+                        TypeID => $GenericAgentData{NewTypeID},
+                    );
+                    delete $GenericAgentData{NewTypeID};
                 }
             }
             elsif ( $Attribute eq 'OwnerIDs' ) {
@@ -462,6 +492,30 @@ sub _ExportGenericAgents {
                     delete $GenericAgentData{QueueIDs};
                 }
             }
+            elsif ( $Attribute eq 'ServiceIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{ServiceIDs} ) ) {
+                    my @Services;
+                    for my $ServiceID ( $GenericAgentData{ServiceIDs}->@* ) {
+                        push @Services, $ServiceObject->ServiceLookup(
+                            ServiceID => $ServiceID,
+                        );
+                    }
+                    $GenericAgentData{Services} = \@Services;
+                    delete $GenericAgentData{ServiceIDs};
+                }
+            }
+            elsif ( $Attribute eq 'SLAIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{SLAIDs} ) ) {
+                    my @SLAs;
+                    for my $SLAID ( $GenericAgentData{SLAIDs}->@* ) {
+                        push @SLAs, $SLAObject->SLALookup(
+                            SLAID => $SLAID,
+                        );
+                    }
+                    $GenericAgentData{SLAs} = \@SLAs;
+                    delete $GenericAgentData{SLAIDs};
+                }
+            }
             elsif ( $Attribute eq 'StateIDs' ) {
                 if ( IsArrayRefWithData( $GenericAgentData{StateIDs} ) ) {
                     my @States;
@@ -472,6 +526,18 @@ sub _ExportGenericAgents {
                     }
                     $GenericAgentData{States} = \@States;
                     delete $GenericAgentData{StateIDs};
+                }
+            }
+            elsif ( $Attribute eq 'TypeIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{TypeIDs} ) ) {
+                    my @Types;
+                    for my $TypeID ( $GenericAgentData{TypeIDs}->@* ) {
+                        push @Types, $TypeObject->TypeLookup(
+                            TypeID => $TypeID,
+                        );
+                    }
+                    $GenericAgentData{Types} = \@Types;
+                    delete $GenericAgentData{TypeIDs};
                 }
             }
         }
@@ -489,7 +555,10 @@ sub _ImportGenericAgents {
     my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
     my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+    my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
     my %GenericAgentList   = $GenericAgentObject->JobList();
@@ -538,9 +607,24 @@ sub _ImportGenericAgents {
                 Queue => $GenericAgentData->{NewQueue},
             );
         }
+        if ( $GenericAgentData->{NewService} ) {
+            $GenericAgentData->{NewServiceID} = $ServiceObject->ServiceLookup(
+                Service => $GenericAgentData->{NewService},
+            );
+        }
+        if ( $GenericAgentData->{NewSLA} ) {
+            $GenericAgentData->{NewSLAID} = $SLAObject->SLALookup(
+                SLA => $GenericAgentData->{NewSLA},
+            );
+        }
         if ( $GenericAgentData->{NewState} ) {
             $GenericAgentData->{NewStateID} = $StateObject->StateLookup(
                 State => $GenericAgentData->{NewState},
+            );
+        }
+        if ( $GenericAgentData->{NewType} ) {
+            $GenericAgentData->{NewTypeID} = $TypeObject->TypeLookup(
+                Type => $GenericAgentData->{NewType},
             );
         }
         if ( IsArrayRefWithData( $GenericAgentData->{Owners} ) ) {
@@ -570,6 +654,24 @@ sub _ImportGenericAgents {
             }
             $GenericAgentData->{QueueIDs} = \@QueueIDs;
         }
+        if ( IsArrayRefWithData( $GenericAgentData->{Services} ) ) {
+            my @ServiceIDs;
+            for my $Service ( $GenericAgentData->{Services}->@* ) {
+                push @ServiceIDs, $ServiceObject->ServiceLookup(
+                    Service => $Service,
+                );
+            }
+            $GenericAgentData->{ServiceIDs} = \@ServiceIDs;
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{SLAs} ) ) {
+            my @SLAIDs;
+            for my $SLA ( $GenericAgentData->{SLAs}->@* ) {
+                push @SLAIDs, $SLAObject->SLALookup(
+                    SLA => $SLA,
+                );
+            }
+            $GenericAgentData->{SLAIDs} = \@SLAIDs;
+        }
         if ( IsArrayRefWithData( $GenericAgentData->{States} ) ) {
             my @StateIDs;
             for my $State ( $GenericAgentData->{States}->@* ) {
@@ -578,6 +680,15 @@ sub _ImportGenericAgents {
                 );
             }
             $GenericAgentData->{StateIDs} = \@StateIDs;
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{Types} ) ) {
+            my @TypeIDs;
+            for my $Type ( $GenericAgentData->{Types}->@* ) {
+                push @TypeIDs, $TypeObject->TypeLookup(
+                    Type => $Type,
+                );
+            }
+            $GenericAgentData->{TypeIDs} = \@TypeIDs;
         }
 
         if ($GenericAgentID) {
