@@ -123,6 +123,15 @@
             </Hash>
         </Value>
     </Setting>
+    <Setting Name="AutoloadPerlPackages###003-QueueImportExport" Required="0" Valid="1">
+        <Description Translatable="1">Autoload configuration for Queue import and export functions.</Description>
+        <Navigation>Core::Autoload</Navigation>
+        <Value>
+            <Array>
+                <Item ValueType="String">Kernel::Autoload::QueueImportExport</Item>
+            </Array>
+        </Value>
+    </Setting>
     <Setting Name="Frontend::Module###AdminRoleImportExport" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the admin interface.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
