@@ -486,6 +486,11 @@ sub _ImportGenericAgents {
     my ( $Self, %Param ) = @_;
 
     my $GenericAgentObject = $Kernel::OM->Get('Kernel::System::GenericAgent');
+    my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
+    my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
     my %GenericAgentList   = $GenericAgentObject->JobList();
     my %GenericAgentLookup = reverse %GenericAgentList;
@@ -504,6 +509,76 @@ sub _ImportGenericAgents {
         $GenericAgentData->{ValidID} = $ValidObject->ValidLookup(
             Valid => $GenericAgentData->{Valid},
         );
+        if ( IsArrayRefWithData( $GenericAgentData->{Locks} ) ) {
+            my @LockIDs;
+            for my $Lock ( $GenericAgentData->{Locks}->@* ) {
+                push @LockIDs, $LockObject->LockLookup(
+                    Lock => $Lock,
+                );
+            }
+            $GenericAgentData->{LockIDs} = \@LockIDs;
+        }
+        if ( $GenericAgentData->{NewLock} ) {
+            $GenericAgentData->{NewLockID} = $LockObject->LockLookup(
+                Lock => $GenericAgentData->{NewLock},
+            );
+        }
+        if ( $GenericAgentData->{NewOwner} ) {
+            $GenericAgentData->{NewOwnerID} = $UserObject->UserLookup(
+                UserID => $GenericAgentData->{NewOwner},
+            );
+        }
+        if ( $GenericAgentData->{NewPriority} ) {
+            $GenericAgentData->{NewPriorityID} = $PriorityObject->PriorityLookup(
+                Priority => $GenericAgentData->{NewPriority},
+            );
+        }
+        if ( $GenericAgentData->{NewQueue} ) {
+            $GenericAgentData->{NewQueueID} = $QueueObject->QueueLookup(
+                Queue => $GenericAgentData->{NewQueue},
+            );
+        }
+        if ( $GenericAgentData->{NewState} ) {
+            $GenericAgentData->{NewStateID} = $StateObject->StateLookup(
+                State => $GenericAgentData->{NewState},
+            );
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{Owners} ) ) {
+            my @OwnerIDs;
+            for my $Owner ( $GenericAgentData->{Owners}->@* ) {
+                push @OwnerIDs, $UserObject->UserLookup(
+                    User => $Owner,
+                );
+            }
+            $GenericAgentData->{OwnerIDs} = \@OwnerIDs;
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{Priorities} ) ) {
+            my @PriorityIDs;
+            for my $Priority ( $GenericAgentData->{Priorities}->@* ) {
+                push @PriorityIDs, $PriorityObject->PriorityLookup(
+                    Priority => $Priority,
+                );
+            }
+            $GenericAgentData->{PriorityIDs} = \@PriorityIDs;
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{Queues} ) ) {
+            my @QueueIDs;
+            for my $Queue ( $GenericAgentData->{Queues}->@* ) {
+                push @QueueIDs, $QueueObject->QueueLookup(
+                    Queue => $Queue,
+                );
+            }
+            $GenericAgentData->{QueueIDs} = \@QueueIDs;
+        }
+        if ( IsArrayRefWithData( $GenericAgentData->{States} ) ) {
+            my @StateIDs;
+            for my $State ( $GenericAgentData->{States}->@* ) {
+                push @StateIDs, $StateObject->StateLookup(
+                    State => $State,
+                );
+            }
+            $GenericAgentData->{StateIDs} = \@StateIDs;
+        }
 
         if ($GenericAgentID) {
 
