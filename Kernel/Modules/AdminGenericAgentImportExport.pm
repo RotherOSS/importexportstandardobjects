@@ -41,7 +41,6 @@ our @ObjectDependencies = (
     'Kernel::System::State',
     'Kernel::System::Type',
     'Kernel::System::User',
-    'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
 );
@@ -288,7 +287,6 @@ sub _GenericAgentShow {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
     if ( IsHashRefWithData( $Param{Data}{GenericAgents} ) ) {
 
@@ -303,14 +301,8 @@ sub _GenericAgentShow {
 
             next GENERICAGENTNAME if !IsHashRefWithData($GenericAgentData);
 
-            # convert ValidID to Validity string
-            my $Valid = $GenericAgentData->{Valid} || $ValidObject->ValidLookup(
-                ValidID => $GenericAgentData->{Valid},
-            );
-
             my %GenericAgentData = (
                 %{$GenericAgentData},
-                Valid => $Valid,
             );
 
             for my $Blocks ( 'GenericAgentsRow', 'GenericAgentCheckbox', $Param{Type} ) {
@@ -354,7 +346,6 @@ sub _ExportGenericAgents {
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
     my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
-    my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
 
     my %GenericAgentList = $GenericAgentObject->JobList();
 
@@ -374,13 +365,7 @@ sub _ExportGenericAgents {
         ATTRIBUTE:
         for my $Attribute ( keys %GenericAgentData ) {
 
-            if ( $Attribute eq 'Valid' ) {
-                my $Valid = $ValidObject->ValidLookup(
-                    ValidID => $GenericAgentData{Valid},
-                );
-                $GenericAgentData{Valid} = $Valid;
-            }
-            elsif ( $Attribute eq 'LockIDs' ) {
+            if ( $Attribute eq 'LockIDs' ) {
                 if ( IsArrayRefWithData( $GenericAgentData{LockIDs} ) ) {
                     my @Locks;
                     for my $LockID ( $GenericAgentData{LockIDs}->@* ) {
@@ -560,7 +545,6 @@ sub _ImportGenericAgents {
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
     my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
-    my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
     my %GenericAgentList   = $GenericAgentObject->JobList();
     my %GenericAgentLookup = reverse %GenericAgentList;
 
@@ -575,9 +559,6 @@ sub _ImportGenericAgents {
         next GENERICAGENTNAME if ( !$Param{OverwriteExistingEntities} && $GenericAgentID );
 
         # translate named data back to IDs
-        $GenericAgentData->{ValidID} = $ValidObject->ValidLookup(
-            Valid => $GenericAgentData->{Valid},
-        );
         if ( IsArrayRefWithData( $GenericAgentData->{Locks} ) ) {
             my @LockIDs;
             for my $Lock ( $GenericAgentData->{Locks}->@* ) {
@@ -594,7 +575,7 @@ sub _ImportGenericAgents {
         }
         if ( $GenericAgentData->{NewOwner} ) {
             $GenericAgentData->{NewOwnerID} = $UserObject->UserLookup(
-                UserID => $GenericAgentData->{NewOwner},
+                UserLogin => $GenericAgentData->{NewOwner},
             );
         }
         if ( $GenericAgentData->{NewPriority} ) {
@@ -609,12 +590,12 @@ sub _ImportGenericAgents {
         }
         if ( $GenericAgentData->{NewService} ) {
             $GenericAgentData->{NewServiceID} = $ServiceObject->ServiceLookup(
-                Service => $GenericAgentData->{NewService},
+                Name => $GenericAgentData->{NewService},
             );
         }
         if ( $GenericAgentData->{NewSLA} ) {
             $GenericAgentData->{NewSLAID} = $SLAObject->SLALookup(
-                SLA => $GenericAgentData->{NewSLA},
+                Name => $GenericAgentData->{NewSLA},
             );
         }
         if ( $GenericAgentData->{NewState} ) {
@@ -631,7 +612,7 @@ sub _ImportGenericAgents {
             my @OwnerIDs;
             for my $Owner ( $GenericAgentData->{Owners}->@* ) {
                 push @OwnerIDs, $UserObject->UserLookup(
-                    User => $Owner,
+                    UserLogin => $Owner,
                 );
             }
             $GenericAgentData->{OwnerIDs} = \@OwnerIDs;
@@ -658,7 +639,7 @@ sub _ImportGenericAgents {
             my @ServiceIDs;
             for my $Service ( $GenericAgentData->{Services}->@* ) {
                 push @ServiceIDs, $ServiceObject->ServiceLookup(
-                    Service => $Service,
+                    Name => $Service,
                 );
             }
             $GenericAgentData->{ServiceIDs} = \@ServiceIDs;
@@ -667,7 +648,7 @@ sub _ImportGenericAgents {
             my @SLAIDs;
             for my $SLA ( $GenericAgentData->{SLAs}->@* ) {
                 push @SLAIDs, $SLAObject->SLALookup(
-                    SLA => $SLA,
+                    Name => $SLA,
                 );
             }
             $GenericAgentData->{SLAIDs} = \@SLAIDs;
