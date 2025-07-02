@@ -176,4 +176,48 @@
             </Array>
         </Value>
     </Setting>
+    <Setting Name="Frontend::Module###AdminTemplateImportExport" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the admin interface.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
+        <Value>
+            <Item ValueType="FrontendRegistration">
+                <Hash>
+                    <Item Key="GroupRo">
+                        <Array>
+                        </Array>
+                    </Item>
+                    <Item Key="Group">
+                        <Array>
+                            <Item>admin</Item>
+                        </Array>
+                    </Item>
+                    <Item Key="Description">Template Import Export</Item>
+                    <Item Key="Title">TemplateImportExport</Item>
+                    <Item Key="NavBarName">Admin</Item>
+                </Hash>
+            </Item>
+        </Value>
+    </Setting>
+    <Setting Name="Loader::Module::AdminTemplateImportExport###003-ImportExportButtons" Required="0" Valid="1">
+        <Description Translatable="1">Loader module registration for the agent interface.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::Loader</Navigation>
+        <Value>
+            <Hash>
+                <Item Key="JavaScript">
+                    <Array>
+                        <Item>Core.Agent.Admin.TemplateImportExport.js</Item>
+                    </Array>
+                </Item>
+            </Hash>
+        </Value>
+    </Setting>
+    <Setting Name="AutoloadPerlPackages###003-TemplateImportExport" Required="0" Valid="1">
+        <Description Translatable="1">Autoload configuration for Template import and export functions.</Description>
+        <Navigation>Core::Autoload</Navigation>
+        <Value>
+            <Array>
+                <Item ValueType="String">Kernel::Autoload::TemplateImportExport</Item>
+            </Array>
+        </Value>
+    </Setting>
 </otobo_config>
