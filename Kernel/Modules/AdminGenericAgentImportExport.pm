@@ -32,7 +32,11 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::GenericAgent',
+    'Kernel::System::Lock',
     'Kernel::System::Log',
+    'Kernel::System::Priority',
+    'Kernel::System::Queue',
+    'Kernel::System::State',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
@@ -297,7 +301,7 @@ sub _GenericAgentShow {
 
             # convert ValidID to Validity string
             my $Valid = $GenericAgentData->{Valid} || $ValidObject->ValidLookup(
-                ValidID => $GenericAgentData->{ValidID},
+                ValidID => $GenericAgentData->{Valid},
             );
 
             my %GenericAgentData = (
@@ -338,6 +342,11 @@ sub _ExportGenericAgents {
     }
 
     my $GenericAgentObject = $Kernel::OM->Get('Kernel::System::GenericAgent');
+    my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
+    my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
+    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
+    my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+    my $ValidObject        = $Kernel::OM->Get('Kernel::System::Valid');
 
     my %GenericAgentList = $GenericAgentObject->JobList();
 
@@ -354,22 +363,96 @@ sub _ExportGenericAgents {
         }
 
         # translate IDs into names or name-like identifiers
-        my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+        ATTRIBUTE:
+        for my $Attribute ( keys %GenericAgentData ) {
 
-        # TODO check if any transformation is needed at all
-        # ATTRIBUTE:
-        # for my $Attribute ( keys %GenericAgentData ) {
-
-        #     next ATTRIBUTE unless $Attribute =~ /ID/;
-
-        #     if ( $Attribute eq 'ValidID' ) {
-        #         my $Valid = $ValidObject->ValidLookup(
-        #             ValidID => $GenericAgentData{ValidID},
-        #         );
-        #         $GenericAgentData{Valid} = $Valid;
-        #         delete $GenericAgentData{ValidID};
-        #     }
-        # }
+            if ( $Attribute eq 'Valid' ) {
+                my $Valid = $ValidObject->ValidLookup(
+                    ValidID => $GenericAgentData{Valid},
+                );
+                $GenericAgentData{Valid} = $Valid;
+            }
+            elsif ( $Attribute eq 'LockIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{LockIDs} ) ) {
+                    my @Locks;
+                    for my $LockID ( $GenericAgentData{LockIDs}->@* ) {
+                        push @Locks, $LockObject->LockLookup(
+                            LockID => $LockID,
+                        );
+                    }
+                    $GenericAgentData{Locks} = \@Locks;
+                    delete $GenericAgentData{LockIDs};
+                }
+            }
+            elsif ( $Attribute eq 'NewLockID' ) {
+                if ( $GenericAgentData{NewLockID} ) {
+                    $GenericAgentData{NewLock} = $LockObject->LockLookup(
+                        LockID => $GenericAgentData{NewLockID},
+                    );
+                    delete $GenericAgentData{NewLockID};
+                }
+            }
+            elsif ( $Attribute eq 'NewPriorityID' ) {
+                if ( $GenericAgentData{NewPriorityID} ) {
+                    $GenericAgentData{NewPriority} = $PriorityObject->PriorityLookup(
+                        PriorityID => $GenericAgentData{NewPriorityID},
+                    );
+                    delete $GenericAgentData{NewPriorityID};
+                }
+            }
+            elsif ( $Attribute eq 'NewQueueID' ) {
+                if ( $GenericAgentData{NewQueueID} ) {
+                    $GenericAgentData{NewQueue} = $QueueObject->QueueLookup(
+                        QueueID => $GenericAgentData{NewQueueID},
+                    );
+                    delete $GenericAgentData{NewQueueID};
+                }
+            }
+            elsif ( $Attribute eq 'NewStateID' ) {
+                if ( $GenericAgentData{NewStateID} ) {
+                    $GenericAgentData{NewState} = $StateObject->StateLookup(
+                        StateID => $GenericAgentData{NewStateID},
+                    );
+                    delete $GenericAgentData{NewStateID};
+                }
+            }
+            elsif ( $Attribute eq 'PriorityIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{PriorityIDs} ) ) {
+                    my @Priorities;
+                    for my $PriorityID ( $GenericAgentData{PriorityIDs}->@* ) {
+                        push @Priorities, $PriorityObject->PriorityLookup(
+                            PriorityID => $PriorityID,
+                        );
+                    }
+                    $GenericAgentData{Priorities} = \@Priorities;
+                    delete $GenericAgentData{PriorityIDs};
+                }
+            }
+            elsif ( $Attribute eq 'QueueIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{QueueIDs} ) ) {
+                    my @Queues;
+                    for my $QueueID ( $GenericAgentData{QueueIDs}->@* ) {
+                        push @Queues, $QueueObject->QueueLookup(
+                            QueueID => $QueueID,
+                        );
+                    }
+                    $GenericAgentData{Queues} = \@Queues;
+                    delete $GenericAgentData{QueueIDs};
+                }
+            }
+            elsif ( $Attribute eq 'StateIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{StateIDs} ) ) {
+                    my @States;
+                    for my $StateID ( $GenericAgentData{StateIDs}->@* ) {
+                        push @States, $StateObject->StateLookup(
+                            StateID => $StateID,
+                        );
+                    }
+                    $GenericAgentData{States} = \@States;
+                    delete $GenericAgentData{StateIDs};
+                }
+            }
+        }
 
         $ExportData{ $GenericAgentData{Name} } = \%GenericAgentData;
     }
