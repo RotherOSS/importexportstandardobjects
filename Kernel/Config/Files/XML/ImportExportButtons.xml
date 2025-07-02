@@ -35,6 +35,15 @@
             </Hash>
         </Value>
     </Setting>
+    <Setting Name="AutoloadPerlPackages###003-GenericAgentImportExport" Required="0" Valid="1">
+        <Description Translatable="1">Autoload configuration for GenericAgent import and export functions.</Description>
+        <Navigation>Core::Autoload</Navigation>
+        <Value>
+            <Array>
+                <Item ValueType="String">Kernel::Autoload::GenericAgentImportExport</Item>
+            </Array>
+        </Value>
+    </Setting>
     <Setting Name="Frontend::Module###AdminGroupImportExport" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the admin interface.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
