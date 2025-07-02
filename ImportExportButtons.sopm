@@ -16,6 +16,8 @@
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRole.tt" />
+        <File Permission="660" Location="Kernel/Autoload/GenericAgentImportExport.pm" />
+        <File Permission="660" Location="Kernel/Autoload/GroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
