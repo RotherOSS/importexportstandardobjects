@@ -248,7 +248,7 @@ sub _Mask {
             Valid => 0,
         );
 
-        # get queue data
+        # get group data
         for my $GroupID ( keys %Groups ) {
             my %GroupData = $GroupObject->GroupGet(
                 ID => $GroupID,
@@ -261,7 +261,7 @@ sub _Mask {
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
-    # print the list of queues
+    # print the list of groups
     $Self->_GroupShow(
         %Param,
     );
@@ -309,7 +309,7 @@ sub _GroupShow {
 
             for my $Blocks ( 'GroupsRow', 'GroupCheckbox', $Param{Type} ) {
 
-                # print each queue row
+                # print each group row
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {

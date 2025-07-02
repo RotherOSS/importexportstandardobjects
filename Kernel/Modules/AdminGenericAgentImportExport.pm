@@ -244,7 +244,7 @@ sub _Mask {
         # export
         my %GenericAgents = $GenericAgentObject->JobList();
 
-        # get queue data
+        # get generic agent data
         for my $GenericAgentName ( keys %GenericAgents ) {
             my %GenericAgentData = $GenericAgentObject->JobGet(
                 Name => $GenericAgentName,
@@ -257,7 +257,7 @@ sub _Mask {
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
-    # print the list of queues
+    # print the list of generic agents
     $Self->_GenericAgentShow(
         %Param,
     );
@@ -298,7 +298,7 @@ sub _GenericAgentShow {
 
             for my $Blocks ( 'GenericAgentsRow', 'GenericAgentCheckbox', $Param{Type} ) {
 
-                # print each queue row
+                # print each generic agent row
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {

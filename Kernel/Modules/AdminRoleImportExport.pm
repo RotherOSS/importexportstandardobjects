@@ -248,7 +248,7 @@ sub _Mask {
             Valid => 0,
         );
 
-        # get queue data
+        # get role data
         for my $RoleID ( keys %Roles ) {
             my %RoleData = $GroupObject->RoleGet(
                 ID => $RoleID,
@@ -261,7 +261,7 @@ sub _Mask {
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
-    # print the list of queues
+    # print the list of roles
     $Self->_RoleShow(
         %Param,
     );
@@ -309,7 +309,7 @@ sub _RoleShow {
 
             for my $Blocks ( 'RolesRow', 'RoleCheckbox', $Param{Type} ) {
 
-                # print each queue row
+                # print each role row
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {
