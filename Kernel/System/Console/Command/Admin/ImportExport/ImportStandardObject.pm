@@ -19,6 +19,13 @@ package Kernel::System::Console::Command::Admin::ImportExport::ImportStandardObj
 use strict;
 use warnings;
 
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::VariableCheck qw(IsHashRefWithData);
+
 use parent qw(Kernel::System::Console::BaseCommand);
 
 our @ObjectDependencies = (
@@ -76,23 +83,59 @@ sub PreRun {
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    $Self->Print("<yellow>Meaningful start message...</yellow>\n");
+
+    # get (probably) necessary objects
     my $GenericAgentObject     = $Kernel::OM->Get('Kernel::System::GenericAgent');
     my $GroupObject            = $Kernel::OM->Get('Kernel::System::Group');
     my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
+    my $YAMLObject             = $Kernel::OM->Get('Kernel::System::YAML');
 
     # object to sub mapping
     my %ImportSubMapping = (
-        GenericAgent     => \&$GenericAgentObject->ImportGenericAgents,
-        Group            => \&$GroupObject->ImportGroups,
-        Queue            => \&$QueueObject->ImportQueues,
-        Role             => \&$GroupObject->ImportRoles,
-        StandardTemplate => \&$StandardTemplateObject->ImportTemplates,
+        # GenericAgents     => \&$GenericAgentObject->ImportGenericAgents,
+        # Groups            => \&$GroupObject->ImportGroups,
+        # Queues            => \&$QueueObject->ImportQueues,
+        # Roles             => \&$GroupObject->ImportRoles,
+        # StandardTemplates => \&$StandardTemplateObject->ImportTemplates,
     );
 
-    $Self->Print("<yellow>Meaningful start message...</yellow>\n");
+    # fetch params
+    my $File                      = $Self->GetArgument('source') || '';
+    my $OverwriteExistingEntities = $Self->GetOption('update')   || 0;
 
-    # return $Self->ExitCodeError();
+    # shortcut for error printing
+    my $Error = sub {
+        $Self->Print("<red>$_[0]</red>\n");
+
+        $Self->ExitCodeError();
+    };
+
+    # read file
+    my $RawInput = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
+        Location => $File,
+    );
+
+    my $YAMLData = $YAMLObject->Load(
+        Data => ${$RawInput},
+    );
+
+    if ( !IsHashRefWithData($YAMLData) ) {
+        $Error->('The input file does not have the necessary structure.');
+    }
+
+    my ($RawObjectType) = keys $YAMLData->%*;
+
+    # strip plural-s from object type
+    my $ObjectType = $RawObjectType;
+    if ( $RawObjectType =~ /(?<ObjectType>\w+)s$/ ) {
+        $ObjectType = $+{ObjectType};
+    }
+
+    if ( !$ImportSubMapping{$ObjectType} ) {
+        $Error->("Object type '$ObjectType' is not importable via this console command.");
+    }
 
     $Self->Print("<green>Done.</green>\n");
     return $Self->ExitCodeOk();
