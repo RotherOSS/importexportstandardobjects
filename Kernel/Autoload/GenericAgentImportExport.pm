@@ -254,17 +254,17 @@ sub ImportGenericAgents {
     my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my %GenericAgentList   = $GenericAgentObject->JobList();
-    my %GenericAgentLookup = reverse %GenericAgentList;
 
     GENERICAGENTNAME:
     for my $GenericAgentName ( keys $Param{GenericAgents}->%* ) {
         my $GenericAgentData = $Param{GenericAgents}{$GenericAgentName};
 
-        # TODO check what is exactly stored there and rename attribute accordingly
-        my $GenericAgentID = $GenericAgentLookup{ $GenericAgentData->{Name} };
+        # check if there exists a generic agent with same name in the system
+        #   NOTE GenericAgentList has format { Name => 'Name' }, therefor using a lookup is unnecessary
+        my $GenericAgentCheckName = $GenericAgentList{ $GenericAgentData->{Name} };
 
         # skip if generic agent with same name exists and overwrite is not set
-        next GENERICAGENTNAME if ( !$Param{OverwriteExistingEntities} && $GenericAgentID );
+        next GENERICAGENTNAME if ( !$Param{OverwriteExistingEntities} && $GenericAgentCheckName );
 
         # translate named data back to IDs
         if ( IsArrayRefWithData( $GenericAgentData->{Locks} ) ) {
@@ -380,17 +380,17 @@ sub ImportGenericAgents {
             $GenericAgentData->{TypeIDs} = \@TypeIDs;
         }
 
-        if ($GenericAgentID) {
+        if ($GenericAgentCheckName) {
 
             # remove/clean up old profile stuff
             $GenericAgentObject->JobDelete(
-                Name   => $GenericAgentID,
+                Name   => $GenericAgentCheckName,
                 UserID => $Self->{UserID},
             );
 
             # insert new profile params
             my $Success = $GenericAgentObject->JobAdd(
-                Name   => $GenericAgentID,
+                Name   => $GenericAgentCheckName,
                 Data   => $GenericAgentData,
                 UserID => $Self->{UserID},
             );
