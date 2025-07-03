@@ -11,32 +11,38 @@
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGenericAgent.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGroup.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminQueueTemplates.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminRole.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminTemplate.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGenericAgent.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueueTemplates.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRole.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminTemplate.tt" />
         <File Permission="660" Location="Kernel/Autoload/GenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/GroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/QueueImportExport.pm" />
+        <File Permission="660" Location="Kernel/Autoload/QueueTemplatesImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/RoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/TemplateImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
+        <File Permission="660" Location="Kernel/Modules/AdminQueueTemplatesImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminRoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminTemplateImportExport.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGenericAgentImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueTemplatesImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminTemplateImportExport.tt" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.GenericAgentImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.GroupImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.QueueImportExport.js" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.QueueTemplatesImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.RoleImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.TemplateImportExport.js" />
     </Filelist>

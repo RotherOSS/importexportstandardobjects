@@ -35,7 +35,7 @@ our @ObjectDependencies = (
     'Kernel::System::Valid',
 );
 
-sub ExportQueues {
+sub ExportQueueTemplates {
     my ( $Self, %Param ) = @_;
 
     my %QueueFilter;
@@ -164,7 +164,7 @@ sub ExportQueues {
     return \%ExportData;
 }
 
-sub ImportQueues {
+sub ImportQueueTemplates {
     my ( $Self, %Param ) = @_;
 
     my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
