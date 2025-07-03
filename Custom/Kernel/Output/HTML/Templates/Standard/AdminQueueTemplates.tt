@@ -86,7 +86,7 @@
             </div>
         </div>
 [% RenderBlockEnd("FilterQueue") %]
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
 [% RenderBlockStart("ImportExportWidget") %]
         <div class='WidgetSimple' id='QueueTemplatesImportExportWidget'>
             <div class='Header'>
@@ -149,7 +149,7 @@
             </div>
         </div>
 [% RenderBlockEnd("ImportExportWidget") %]
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
 
     </div>
 

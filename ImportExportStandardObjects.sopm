@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otobo_package version="1.0">
-    <Name>ImportExportButtons</Name>
+    <Name>ImportExportStandardObjects</Name>
     <Version>0.0.0</Version>
     <Framework>11.0.x</Framework>
     <Vendor>Rother OSS GmbH</Vendor>
@@ -26,7 +26,7 @@
         <File Permission="660" Location="Kernel/Autoload/QueueTemplatesImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/RoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/TemplateImportExport.pm" />
-        <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportButtons.xml" />
+        <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportStandardObjects.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />

@@ -327,9 +327,9 @@ sub _Overview {
         },
     );
     $LayoutObject->Block( Name => 'Filter' );
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
     $LayoutObject->Block( Name => 'ImportExportWidget' );
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
 
     my %List = $GroupObject->RoleList(
         Valid => $Self->{IncludeInvalid} ? 0 : 1,

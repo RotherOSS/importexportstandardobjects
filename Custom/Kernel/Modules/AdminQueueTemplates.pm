@@ -434,9 +434,9 @@ sub _Overview {
     #    $LayoutObject->Block(Name=>'ActionList');
     $LayoutObject->Block( Name => 'FilterTemplate' );
     $LayoutObject->Block( Name => 'FilterQueue' );
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
     $LayoutObject->Block( Name => 'ImportExportWidget' );
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
     $LayoutObject->Block( Name => 'OverviewResult' );
 
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');

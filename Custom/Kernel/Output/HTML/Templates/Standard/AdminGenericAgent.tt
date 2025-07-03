@@ -85,7 +85,7 @@
             </div>
         </div>
 [% RenderBlockEnd("Filter") %]
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
 [% RenderBlockStart("ImportExportWidget") %]
         <div class='WidgetSimple' id='GenericAgentImportExportWidget'>
             <div class='Header'>
@@ -148,7 +148,7 @@
             </div>
         </div>
 [% RenderBlockEnd("ImportExportWidget") %]
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
     </div>
 
     <div class="ContentColumn">

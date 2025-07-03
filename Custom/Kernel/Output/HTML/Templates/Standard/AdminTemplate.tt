@@ -95,7 +95,7 @@
                 </p>
             </div>
         </div>
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
 [% RenderBlockStart("ImportExportWidget") %]
         <div class='WidgetSimple' id='TemplateImportExportWidget'>
             <div class='Header'>
@@ -158,7 +158,7 @@
             </div>
         </div>
 [% RenderBlockEnd("ImportExportWidget") %]
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
     </div>
     <div class="ContentColumn">
 

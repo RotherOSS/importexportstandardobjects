@@ -992,9 +992,9 @@ sub _Overview {
         },
     );
     $LayoutObject->Block( Name => 'Filter' );
-# Rother OSS / ImportExportButtons
+# Rother OSS / ImportExportStandardObjects
     $LayoutObject->Block( Name => 'ImportExportWidget' );
-# EO ImportExportButtons
+# EO ImportExportStandardObjects
 
     $LayoutObject->Block(
         Name => 'OverviewResult',
