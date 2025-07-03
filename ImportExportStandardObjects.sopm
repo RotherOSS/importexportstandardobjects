@@ -39,6 +39,9 @@
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueTemplatesImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminTemplateImportExport.tt" />
+        <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportACL.pm" />
+        <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportDynamicField.pm" />
+        <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportProcess.pm" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.GenericAgentImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.GroupImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.QueueImportExport.js" />
