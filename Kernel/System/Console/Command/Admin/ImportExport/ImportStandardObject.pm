@@ -50,18 +50,28 @@ sub Configure {
     return;
 }
 
-# sub PreRun {
-#     my ( $Self, %Param ) = @_;
-#
-#     # Perform any custom validations here. Command execution can be stopped with die().
-#
-#     # my $TargetDirectory = $Self->GetOption('target-directory');
-#     # if ($TargetDirectory && !-d $TargetDirectory) {
-#     #     die "Directory $TargetDirectory does not exist.\n";
-#     # }
-#
-#     return;
-# }
+sub PreRun {
+    my ( $Self, %Param ) = @_;
+
+    my $Source = $Self->GetArgument('source');
+    if ( !$Source ) {
+
+        # source is optional, even if an import without source is unsatisfying
+    }
+    elsif ( -d $Source ) {
+
+        # a directory is fine
+    }
+    elsif ( -r $Source ) {
+
+        # a readable file is fine
+    }
+    else {
+        die "The source $Source does not exist or can not be read.";
+    }
+
+    return;
+}
 
 sub Run {
     my ( $Self, %Param ) = @_;
