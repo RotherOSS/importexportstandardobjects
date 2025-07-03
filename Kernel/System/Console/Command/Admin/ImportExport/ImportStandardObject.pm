@@ -34,6 +34,7 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
     'Kernel::System::Queue',
     'Kernel::System::StandardTemplate',
+    'Kernel::System::YAML',
 );
 
 sub Configure {
@@ -94,11 +95,31 @@ sub Run {
 
     # object to sub mapping
     my %ImportSubMapping = (
-        # GenericAgents     => \&$GenericAgentObject->ImportGenericAgents,
-        # Groups            => \&$GroupObject->ImportGroups,
-        # Queues            => \&$QueueObject->ImportQueues,
-        # Roles             => \&$GroupObject->ImportRoles,
-        # StandardTemplates => \&$StandardTemplateObject->ImportTemplates,
+        GenericAgent => sub {
+            return $GenericAgentObject->ImportGenericAgents(
+                @_,
+            );
+        },
+        Group => sub {
+            return $GroupObject->ImportGroups(
+                @_,
+            );
+        },
+        Queue => sub {
+            return $QueueObject->ImportQueues(
+                @_,
+            );
+        },
+        Role => sub {
+            return $GroupObject->ImportRoles(
+                @_,
+            );
+        },
+        StandardTemplate => sub {
+            return $StandardTemplateObject->ImportTemplates(
+                @_,
+            );
+        },
     );
 
     # fetch params
@@ -135,6 +156,15 @@ sub Run {
 
     if ( !$ImportSubMapping{$ObjectType} ) {
         $Error->("Object type '$ObjectType' is not importable via this console command.");
+    }
+
+    my $ImportSuccess = $ImportSubMapping{$ObjectType}->(
+        $RawObjectType            => $YAMLData->{$ObjectType},
+        OverwriteExistingEntities => $OverwriteExistingEntities,
+    );
+
+    if ( !$ImportSuccess ) {
+        $Error->('Import failed. Please review the logs for more information.');
     }
 
     $Self->Print("<green>Done.</green>\n");
