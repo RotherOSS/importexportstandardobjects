@@ -115,18 +115,18 @@ sub ImportGroups {
                 ID     => $GroupID,
                 UserID => $Self->{UserID},
             );
-            next GROUPNAME unless $Success;
+            return unless $Success;
         }
         else {
             my $GroupID = $GroupObject->GroupAdd(
                 $GroupData->%*,
                 UserID => $Self->{UserID},
             );
-            next GROUPNAME unless $GroupID;
+            return unless $GroupID;
         }
     }
 
-    return;
+    return 1;
 }
 
 1;

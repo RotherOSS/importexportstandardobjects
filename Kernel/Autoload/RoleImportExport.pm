@@ -115,18 +115,18 @@ sub ImportRoles {
                 ID     => $RoleID,
                 UserID => $Self->{UserID},
             );
-            next ROLENAME unless $Success;
+            return unless $Success;
         }
         else {
             my $RoleID = $GroupObject->RoleAdd(
                 $RoleData->%*,
                 UserID => $Self->{UserID},
             );
-            next ROLENAME unless $RoleID;
+            return unless $RoleID;
         }
     }
 
-    return;
+    return 1;
 }
 
 1;

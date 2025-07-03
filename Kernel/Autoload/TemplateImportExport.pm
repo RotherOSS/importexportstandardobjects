@@ -115,18 +115,18 @@ sub ImportTemplates {
                 ID     => $TemplateID,
                 UserID => $Self->{UserID},
             );
-            next TEMPLATENAME unless $Success;
+            return unless $Success;
         }
         else {
             my $TemplateID = $StandardTemplateObject->StandardTemplateAdd(
                 $TemplateData->%*,
                 UserID => $Self->{UserID},
             );
-            next TEMPLATENAME unless $TemplateID;
+            return unless $TemplateID;
         }
     }
 
-    return;
+    return 1;
 }
 
 1;

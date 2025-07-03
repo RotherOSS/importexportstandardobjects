@@ -334,14 +334,14 @@ sub ImportQueues {
                 QueueID => $QueueID,
                 UserID  => $Self->{UserID},
             );
-            next QUEUENAME unless $Success;
+            return unless $Success;
         }
         else {
             my $QueueID = $QueueObject->QueueAdd(
                 $QueueData->%*,
                 UserID => $Self->{UserID},
             );
-            next QUEUENAME unless $QueueID;
+            return unless $QueueID;
 
             # system address needs QueueID as attribute
             if ( $QueueData->{SystemAddress} ) {
@@ -382,12 +382,12 @@ sub ImportQueues {
                     SystemAddressID => $SystemAddressID,
                     UserID          => $Self->{UserID},
                 );
-                next QUEUENAME unless $Success;
+                return unless $Success;
             }
         }
     }
 
-    return;
+    return 1;
 }
 
 1;
