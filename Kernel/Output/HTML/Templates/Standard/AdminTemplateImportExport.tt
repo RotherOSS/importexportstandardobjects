@@ -101,7 +101,7 @@
                         </thead>
                         <tbody>
 [% RenderBlockStart("TemplatesRow") %]
-                            <tr id="TemplateID_[% Data.TemplateID | html %]">
+                            <tr id="StandardTemplateID_[% Data.ID | html %]">
                                 <td class='Center'>
 [% RenderBlockStart("TemplateCheckbox") %]
                                     <input type="checkbox" id="Templates" name="Templates" value="[% Data.Name | html %]" checked />
@@ -112,7 +112,7 @@
                                     [% Data.Name %]
 [% RenderBlockEnd("Import") %]
 [% RenderBlockStart("Export") %]
-                                    <a href="[% Env("Baselink") %]Action=AdminTemplate;Subaction=Change;TemplateID=[% Data.TemplateID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
+                                    <a href="[% Env("Baselink") %]Action=AdminTemplate;Subaction=Change;ID=[% Data.ID | uri %];Type=[% Data.TemplateType | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
 [% RenderBlockEnd("Export") %]
                                 </td>
                                 <td>
