@@ -394,7 +394,7 @@ sub ImportGenericAgents {
                 Data   => $GenericAgentData,
                 UserID => $Self->{UserID},
             );
-            next GENERICAGENTNAME unless $Success;
+            return unless $Success;
         }
         else {
             my $GenericAgentID = $GenericAgentObject->JobAdd(
@@ -402,11 +402,11 @@ sub ImportGenericAgents {
                 Data   => $GenericAgentData,
                 UserID => $Self->{UserID},
             );
-            next GENERICAGENTNAME unless $GenericAgentID;
+            return unless $GenericAgentID;
         }
     }
 
-    return;
+    return 1;
 }
 
 1;
