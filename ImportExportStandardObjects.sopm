@@ -9,6 +9,7 @@
     <Description Lang="en">..</Description>
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGenericAgent.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminGenericInterfaceWebservice.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGroup.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueueTemplates.pm" />
