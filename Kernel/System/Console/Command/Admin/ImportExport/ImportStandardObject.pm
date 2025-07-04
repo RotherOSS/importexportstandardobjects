@@ -40,7 +40,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('<TBD>.');
+    $Self->Description('Import data for a standard object. Currently supported object types are: GenericAgent, Group, Queue, Role, Template.');
     $Self->AddOption(
         Name        => 'update',
         Description => "Flag if existing objects should be overwritten.",
@@ -84,7 +84,7 @@ sub PreRun {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Self->Print("<yellow>Meaningful start message...</yellow>\n");
+    $Self->Print("<yellow>Starting the import...</yellow>\n");
 
     # get (probably) necessary objects
     my $GenericAgentObject     = $Kernel::OM->Get('Kernel::System::GenericAgent');
