@@ -200,7 +200,7 @@ sub Run {
             ContentType => 'text/html; charset=' . $LayoutObject->{Charset},
             Content     => $TemplateDataYAML,
             Type        => 'attachment',
-            Filename    => "Export_Groups_$TimeStamp.yml",
+            Filename    => "Export_Templates_$TimeStamp.yml",
             NoCache     => 1,
         );
 
