@@ -115,7 +115,7 @@ sub Run {
                 @_,
             );
         },
-        StandardTemplate => sub {
+        Template => sub {
             return $StandardTemplateObject->ImportTemplates(
                 @_,
             );
