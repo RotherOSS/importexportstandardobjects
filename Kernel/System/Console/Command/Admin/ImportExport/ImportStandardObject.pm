@@ -158,8 +158,16 @@ sub Run {
         $Error->("Object type '$ObjectType' is not importable via this console command.");
     }
 
+    my %ImportData;
+    if ( IsHashRefWithData( $YAMLData->{$ObjectType} ) ) {
+        %ImportData = $YAMLData->{$ObjectType}->%*;
+    }
+    elsif ( IsHashRefWithData( $YAMLData->{$RawObjectType} ) ) {
+        %ImportData = $YAMLData->{$RawObjectType}->%*;
+    }
+
     my $ImportSuccess = $ImportSubMapping{$ObjectType}->(
-        $RawObjectType            => $YAMLData->{$ObjectType},
+        $RawObjectType            => \%ImportData,
         OverwriteExistingEntities => $OverwriteExistingEntities,
     );
 
