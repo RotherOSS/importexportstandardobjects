@@ -95,6 +95,8 @@ sub ExportGroups {
 sub ImportGroups {
     my ( $Self, %Param ) = @_;
 
+    my $UserID = $Self->{UserID} || $Param{UserID};
+
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
     my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
     my %GroupList   = $GroupObject->GroupList(
@@ -120,14 +122,14 @@ sub ImportGroups {
             my $Success = $GroupObject->GroupUpdate(
                 $GroupData->%*,
                 ID     => $GroupID,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $Success;
         }
         else {
             my $GroupID = $GroupObject->GroupAdd(
                 $GroupData->%*,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $GroupID;
         }

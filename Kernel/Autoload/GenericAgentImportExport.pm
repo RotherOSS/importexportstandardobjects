@@ -244,6 +244,8 @@ sub ExportGenericAgents {
 sub ImportGenericAgents {
     my ( $Self, %Param ) = @_;
 
+    my $UserID = $Self->{UserID} || $Param{UserID};
+
     my $GenericAgentObject = $Kernel::OM->Get('Kernel::System::GenericAgent');
     my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
@@ -385,14 +387,14 @@ sub ImportGenericAgents {
             # remove/clean up old profile stuff
             $GenericAgentObject->JobDelete(
                 Name   => $GenericAgentCheckName,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
 
             # insert new profile params
             my $Success = $GenericAgentObject->JobAdd(
                 Name   => $GenericAgentCheckName,
                 Data   => $GenericAgentData,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $Success;
         }
@@ -400,7 +402,7 @@ sub ImportGenericAgents {
             my $GenericAgentID = $GenericAgentObject->JobAdd(
                 Name   => $GenericAgentData->{Name},
                 Data   => $GenericAgentData,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $GenericAgentID;
         }

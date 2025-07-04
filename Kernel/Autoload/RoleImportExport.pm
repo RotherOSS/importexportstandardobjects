@@ -88,6 +88,8 @@ sub ExportRoles {
 sub ImportRoles {
     my ( $Self, %Param ) = @_;
 
+    my $UserID = $Self->{UserID} || $Param{UserID};
+
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
     my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
     my %RoleList    = $GroupObject->RoleList(
@@ -113,14 +115,14 @@ sub ImportRoles {
             my $Success = $GroupObject->RoleUpdate(
                 $RoleData->%*,
                 ID     => $RoleID,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $Success;
         }
         else {
             my $RoleID = $GroupObject->RoleAdd(
                 $RoleData->%*,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $RoleID;
         }

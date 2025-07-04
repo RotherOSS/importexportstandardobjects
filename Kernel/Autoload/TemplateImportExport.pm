@@ -95,6 +95,8 @@ sub ExportTemplates {
 sub ImportTemplates {
     my ( $Self, %Param ) = @_;
 
+    my $UserID = $Self->{UserID} || $Param{UserID};
+
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
     my $ValidObject            = $Kernel::OM->Get('Kernel::System::Valid');
     my %TemplateList           = $StandardTemplateObject->StandardTemplateList(
@@ -120,14 +122,14 @@ sub ImportTemplates {
             my $Success = $StandardTemplateObject->StandardTemplateUpdate(
                 $TemplateData->%*,
                 ID     => $TemplateID,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $Success;
         }
         else {
             my $TemplateID = $StandardTemplateObject->StandardTemplateAdd(
                 $TemplateData->%*,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $TemplateID;
         }

@@ -167,6 +167,8 @@ sub ExportQueues {
 sub ImportQueues {
     my ( $Self, %Param ) = @_;
 
+    my $UserID = $Self->{UserID} || $Param{UserID};
+
     my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
     my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
     my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
@@ -242,7 +244,7 @@ sub ImportQueues {
                 my $Success = $SalutationObject->SalutationUpdate(
                     %Salutation,
                     ID     => $SalutationID,
-                    UserID => $Self->{UserID},
+                    UserID => $UserID,
                 );
 
                 next QUEUENAME unless $Success;
@@ -250,7 +252,7 @@ sub ImportQueues {
             elsif ( !$SalutationID ) {
                 $SalutationID = $SalutationObject->SalutationAdd(
                     %Salutation,
-                    UserID => $Self->{UserID},
+                    UserID => $UserID,
                 );
             }
             $QueueData->{SalutationID} = $SalutationID;
@@ -270,7 +272,7 @@ sub ImportQueues {
                 my $Success = $SignatureObject->SignatureUpdate(
                     %Signature,
                     ID     => $SignatureID,
-                    UserID => $Self->{UserID},
+                    UserID => $UserID,
                 );
 
                 next QUEUENAME unless $Success;
@@ -278,7 +280,7 @@ sub ImportQueues {
             elsif ( !$SignatureID ) {
                 $SignatureID = $SignatureObject->SignatureAdd(
                     %Signature,
-                    UserID => $Self->{UserID},
+                    UserID => $UserID,
                 );
             }
             $QueueData->{SignatureID} = $SignatureID;
@@ -315,7 +317,7 @@ sub ImportQueues {
                     my $Success = $SystemAddressObject->SystemAddressUpdate(
                         %SystemAddress,
                         ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                        UserID => $Self->{UserID},
+                        UserID => $UserID,
                     );
 
                     next QUEUENAME unless $Success;
@@ -323,7 +325,7 @@ sub ImportQueues {
                 elsif ( !$SystemAddressID ) {
                     $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
                         %SystemAddress,
-                        UserID => $Self->{UserID},
+                        UserID => $UserID,
                     );
                 }
                 $QueueData->{SystemAddressID} = $SystemAddressID;
@@ -332,14 +334,14 @@ sub ImportQueues {
             my $Success = $QueueObject->QueueUpdate(
                 $QueueData->%*,
                 QueueID => $QueueID,
-                UserID  => $Self->{UserID},
+                UserID  => $UserID,
             );
             return unless $Success;
         }
         else {
             my $QueueID = $QueueObject->QueueAdd(
                 $QueueData->%*,
-                UserID => $Self->{UserID},
+                UserID => $UserID,
             );
             return unless $QueueID;
 
@@ -363,7 +365,7 @@ sub ImportQueues {
                     my $Success = $SystemAddressObject->SystemAddressUpdate(
                         %SystemAddress,
                         ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                        UserID => $Self->{UserID},
+                        UserID => $UserID,
                     );
 
                     next QUEUENAME unless $Success;
@@ -371,7 +373,7 @@ sub ImportQueues {
                 elsif ( !$SystemAddressID ) {
                     $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
                         %SystemAddress,
-                        UserID => $Self->{UserID},
+                        UserID => $UserID,
                     );
                 }
 
@@ -380,7 +382,7 @@ sub ImportQueues {
                     $QueueData->%*,
                     QueueID         => $QueueID,
                     SystemAddressID => $SystemAddressID,
-                    UserID          => $Self->{UserID},
+                    UserID          => $UserID,
                 );
                 return unless $Success;
             }

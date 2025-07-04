@@ -169,6 +169,7 @@ sub Run {
     my $ImportSuccess = $ImportSubMapping{$ObjectType}->(
         $RawObjectType            => \%ImportData,
         OverwriteExistingEntities => $OverwriteExistingEntities,
+        UserID                    => 1,
     );
 
     if ( !$ImportSuccess ) {
