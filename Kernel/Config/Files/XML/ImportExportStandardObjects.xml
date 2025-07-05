@@ -132,7 +132,7 @@
             </Array>
         </Value>
     </Setting>
-    <Setting Name="Frontend::Module###AdminQueueTemplatesImportExport" Required="0" Valid="1">
+    <Setting Name="Frontend::Module###AdminQueueTemplatesImportExport" Required="0" Valid="0">
         <Description Translatable="1">Frontend module registration for the admin interface.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration</Navigation>
         <Value>
@@ -154,7 +154,7 @@
             </Item>
         </Value>
     </Setting>
-    <Setting Name="Loader::Module::AdminQueueTemplatesImportExport###003-ImportExportStandardObjects" Required="0" Valid="1">
+    <Setting Name="Loader::Module::AdminQueueTemplatesImportExport###003-ImportExportStandardObjects" Required="0" Valid="0">
         <Description Translatable="1">Loader module registration for the agent interface.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration::Loader</Navigation>
         <Value>
@@ -167,7 +167,7 @@
             </Hash>
         </Value>
     </Setting>
-    <Setting Name="AutoloadPerlPackages###003-QueueTemplatesImportExport" Required="0" Valid="1">
+    <Setting Name="AutoloadPerlPackages###003-QueueTemplatesImportExport" Required="0" Valid="0">
         <Description Translatable="1">Autoload configuration for Queue-Template relations import and export functions.</Description>
         <Navigation>Core::Autoload</Navigation>
         <Value>
