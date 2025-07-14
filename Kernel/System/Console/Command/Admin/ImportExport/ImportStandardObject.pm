@@ -110,6 +110,11 @@ sub Run {
                 @_,
             );
         },
+        QueueTemplate => sub {
+            return $QueueObject->ImportQueueTemplates(
+                @_,
+            );
+        },
         Role => sub {
             return $GroupObject->ImportRoles(
                 @_,
