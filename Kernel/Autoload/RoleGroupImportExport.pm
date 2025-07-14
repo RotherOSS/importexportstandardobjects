@@ -64,7 +64,10 @@ sub ExportRoleGroups {
                 RoleID => $RoleID,
                 Type   => $Type,
             );
-            $Types{$Type} = \%Data;
+
+            # use values as array to prevent exporting group ids
+            my @GroupNames = values %Data;
+            $Types{$Type} = \@GroupNames;
         }
 
         $ExportData{ $RoleData{Name} } = \%Types;
