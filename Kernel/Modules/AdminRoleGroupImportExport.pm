@@ -174,7 +174,7 @@ sub Run {
 
         if (@Roles) {
 
-            $Data{Roles} = $GroupObject->ExportRoles(
+            $Data{Roles} = $GroupObject->ExportRoleGroups(
                 Roles => \@Roles,
             );
         }

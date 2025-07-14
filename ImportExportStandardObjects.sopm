@@ -28,6 +28,7 @@
         <File Permission="660" Location="Kernel/Autoload/QueueImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/QueueTemplatesImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/RoleImportExport.pm" />
+        <File Permission="660" Location="Kernel/Autoload/RoleGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/TemplateImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportStandardObjects.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
