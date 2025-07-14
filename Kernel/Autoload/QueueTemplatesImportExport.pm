@@ -121,7 +121,7 @@ sub ImportQueueTemplates {
         }
     }
 
-    return;
+    return 1;
 }
 
 1;
