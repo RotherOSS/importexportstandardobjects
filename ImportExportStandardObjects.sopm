@@ -14,12 +14,14 @@
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueue.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminQueueTemplates.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminRole.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminRoleGroup.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminTemplate.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGenericAgent.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueueTemplates.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRole.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRoleGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminTemplate.tt" />
         <File Permission="660" Location="Kernel/Autoload/GenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/GroupImportExport.pm" />
