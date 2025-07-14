@@ -35,12 +35,14 @@
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueTemplatesImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminRoleImportExport.pm" />
+        <File Permission="660" Location="Kernel/Modules/AdminRoleGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminTemplateImportExport.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGenericAgentImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueTemplatesImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleImportExport.tt" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminTemplateImportExport.tt" />
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportACL.pm" />
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportDynamicField.pm" />
