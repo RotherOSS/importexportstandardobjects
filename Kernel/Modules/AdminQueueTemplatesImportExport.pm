@@ -130,7 +130,7 @@ sub Run {
                 my $Selected = grep { $QueueName eq $_ } @QueuesSelected;
                 next QUEUENAME if !$Selected;
 
-                next QUEUENAME if !IsHashRefWithData( $ImportData->{QueueTemplates}{$QueueName} );
+                next QUEUENAME if !IsArrayRefWithData( $ImportData->{QueueTemplates}{$QueueName} );
 
                 $QueuesImport{$QueueName} = $ImportData->{QueueTemplates}{$QueueName};
             }
@@ -138,6 +138,7 @@ sub Run {
             $QueueObject->ImportQueueTemplates(
                 QueueTemplates            => \%QueuesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 

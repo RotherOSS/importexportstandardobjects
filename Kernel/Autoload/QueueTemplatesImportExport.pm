@@ -34,11 +34,8 @@ use Kernel::System::VariableCheck qw(IsArrayRefWithData);
 
 our @ObjectDependencies = (
     'Kernel::Config',
-    'Kernel::System::Group',
     'Kernel::System::Queue',
-    'Kernel::System::Salutation',
-    'Kernel::System::Signature',
-    'Kernel::System::SystemAddress',
+    'Kernel::System::StandardTemplate',
     'Kernel::System::Valid',
 );
 
@@ -86,223 +83,41 @@ sub ImportQueueTemplates {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
-    my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
-    my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
-    my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
-    my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
-    my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
-    my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
-    my %FollowUpOptionList  = $QueueObject->GetFollowUpOptionList(
+    my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
+    my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
+    my %QueueList              = $QueueObject->QueueList(
         Valid => 0,
     );
-    my %FollowUpOptionLookup = reverse %FollowUpOptionList;
-    my %QueueList            = $QueueObject->QueueList(
+    my %QueueLookup          = reverse %QueueList;
+    my %StandardTemplateList = $StandardTemplateObject->StandardTemplateList(
         Valid => 0,
     );
-    my %QueueLookup    = reverse %QueueList;
-    my %SalutationList = $SalutationObject->SalutationList(
-        Valid => 0,
-    );
-    my %SalutationLookup = reverse %SalutationList;
-    my %SignatureList    = $SignatureObject->SignatureList(
-        Valid => 0,
-    );
-    my %SignatureLookup   = reverse %SignatureList;
-    my %SystemAddressList = $SystemAddressObject->SystemAddressList(
-        Valid => 0,
-    );
-    my %SystemAddressLookup = reverse %SystemAddressList;
+    my %StandardTemplateLookup = reverse %StandardTemplateList;
 
     QUEUENAME:
-    for my $QueueName ( keys $Param{Queues}->%* ) {
-        my $QueueData = $Param{Queues}{$QueueName};
+    for my $QueueName ( keys $Param{QueueTemplates}->%* ) {
+        my $QueueTemplates = $Param{QueueTemplates}{$QueueName};
 
-        # in case of child queue, check if all parent queues are present
-        #   either in the system or in the import data
-        my @NameElements = split( /::/, $QueueData->{Name} );
+        my $QueueID = $QueueLookup{$QueueName};
 
-        # check if queue levels conform to system configuration
-        my $MaxQueueLevel = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::MaxQueueLevel');
-        if ( scalar @NameElements > $MaxQueueLevel ) {
-            next QUEUENAME;
-        }
+        next QUEUENAME unless $QueueID;
 
-        if ( scalar @NameElements > 1 ) {
-            my $NameStrg = '';
-            for my $Index ( 0 .. $#NameElements - 1 ) {
-                $NameStrg .= $NameElements[$Index];
+        TEMPLATENAME:
+        for my $TemplateName ( $QueueTemplates->@* ) {
 
-                if ( !$QueueLookup{$NameStrg} && !$Param{Queues}{$NameStrg} ) {
+            # my $Active = $TemplatesSelected{$TemplateID} ? 1 : 0;
 
-                    # parent element not found, skipping
-                    next QUEUENAME;
-                }
-            }
-        }
+            my $StandardTemplateID = $StandardTemplateLookup{$TemplateName};
 
-        my $QueueID = $QueueLookup{ $QueueData->{Name} };
+            next TEMPLATE unless $StandardTemplateID;
 
-        # skip if queue with same name exists and overwrite is not set
-        next QUEUENAME if ( !$Param{OverwriteExistingEntities} && $QueueID );
-
-        # create or update necessary previous objects
-        if ( $QueueData->{Salutation} ) {
-            my %Salutation = $QueueData->{Salutation}->%*;
-
-            # transform names back to IDs where necessary
-            $Salutation{ValidID} = $ValidObject->ValidLookup(
-                Valid => $Salutation{Valid},
+            # set customer user service member
+            $QueueObject->QueueStandardTemplateMemberAdd(
+                QueueID            => $QueueID,
+                StandardTemplateID => $StandardTemplateID,
+                Active             => 1,
+                UserID             => $UserID,
             );
-
-            # check if salutation already exists
-            my $SalutationID = $SalutationLookup{ $Salutation{Name} };
-
-            if ( $SalutationID && $Param{OverwriteExistingEntities} ) {
-                my $Success = $SalutationObject->SalutationUpdate(
-                    %Salutation,
-                    ID     => $SalutationID,
-                    UserID => $UserID,
-                );
-
-                next QUEUENAME unless $Success;
-            }
-            elsif ( !$SalutationID ) {
-                $SalutationID = $SalutationObject->SalutationAdd(
-                    %Salutation,
-                    UserID => $UserID,
-                );
-            }
-            $QueueData->{SalutationID} = $SalutationID;
-        }
-        if ( $QueueData->{Signature} ) {
-            my %Signature = $QueueData->{Signature}->%*;
-
-            # transform names back to IDs where necessary
-            $Signature{ValidID} = $ValidObject->ValidLookup(
-                Valid => $Signature{Valid},
-            );
-
-            # check if salutation already exists
-            my $SignatureID = $SignatureLookup{ $Signature{Name} };
-
-            if ( $SignatureID && $Param{OverwriteExistingEntities} ) {
-                my $Success = $SignatureObject->SignatureUpdate(
-                    %Signature,
-                    ID     => $SignatureID,
-                    UserID => $UserID,
-                );
-
-                next QUEUENAME unless $Success;
-            }
-            elsif ( !$SignatureID ) {
-                $SignatureID = $SignatureObject->SignatureAdd(
-                    %Signature,
-                    UserID => $UserID,
-                );
-            }
-            $QueueData->{SignatureID} = $SignatureID;
-        }
-
-        # translate named data back to IDs
-        $QueueData->{FollowUpID} = $FollowUpOptionLookup{ $QueueData->{FollowUp} };
-        $QueueData->{GroupID}    = $GroupObject->GroupLookup(
-            Group => $QueueData->{Group},
-        );
-        $QueueData->{ValidID} = $ValidObject->ValidLookup(
-            Valid => $QueueData->{Valid},
-        );
-
-        if ($QueueID) {
-
-            # get system address id and set it
-            if ( $QueueData->{SystemAddress} ) {
-                my %SystemAddress = $QueueData->{SystemAddress}->%*;
-
-                # transform names back to IDs where necessary
-                $SystemAddress{ValidID} = $ValidObject->ValidLookup(
-                    Valid => $SystemAddress{Valid},
-                );
-
-                # TODO use $QueueID instead...?
-                $SystemAddress{QueueID} = $QueueObject->QueueLookup(
-                    Queue => $SystemAddress{Queue},
-                );
-
-                my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
-
-                if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
-                    my $Success = $SystemAddressObject->SystemAddressUpdate(
-                        %SystemAddress,
-                        ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                        UserID => $UserID,
-                    );
-
-                    next QUEUENAME unless $Success;
-                }
-                elsif ( !$SystemAddressID ) {
-                    $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
-                        %SystemAddress,
-                        UserID => $UserID,
-                    );
-                }
-                $QueueData->{SystemAddressID} = $SystemAddressID;
-            }
-
-            my $Success = $QueueObject->QueueUpdate(
-                $QueueData->%*,
-                QueueID => $QueueID,
-                UserID  => $UserID,
-            );
-            next QUEUENAME unless $Success;
-        }
-        else {
-            my $QueueID = $QueueObject->QueueAdd(
-                $QueueData->%*,
-                UserID => $UserID,
-            );
-            next QUEUENAME unless $QueueID;
-
-            # system address needs QueueID as attribute
-            if ( $QueueData->{SystemAddress} ) {
-                my %SystemAddress = $QueueData->{SystemAddress}->%*;
-
-                # transform names back to IDs where necessary
-                $SystemAddress{ValidID} = $ValidObject->ValidLookup(
-                    Valid => $SystemAddress{Valid},
-                );
-
-                # TODO use $QueueID instead...?
-                $SystemAddress{QueueID} = $QueueObject->QueueLookup(
-                    Queue => $SystemAddress{Queue},
-                );
-
-                my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
-
-                if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
-                    my $Success = $SystemAddressObject->SystemAddressUpdate(
-                        %SystemAddress,
-                        ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                        UserID => $UserID,
-                    );
-
-                    next QUEUENAME unless $Success;
-                }
-                elsif ( !$SystemAddressID ) {
-                    $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
-                        %SystemAddress,
-                        UserID => $UserID,
-                    );
-                }
-
-                # update queue and set system address id
-                my $Success = $QueueObject->QueueUpdate(
-                    $QueueData->%*,
-                    QueueID         => $QueueID,
-                    SystemAddressID => $SystemAddressID,
-                    UserID          => $UserID,
-                );
-                next QUEUENAME unless $Success;
-            }
         }
     }
 
