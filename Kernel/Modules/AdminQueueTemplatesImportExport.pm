@@ -31,7 +31,6 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::Queue',
-    'Kernel::System::StandardTemplate',
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
@@ -50,12 +49,11 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get objects
-    my $LayoutObject           = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
-    my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
-    my $ParamObject            = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $YAMLObject             = $Kernel::OM->Get('Kernel::System::YAML');
-    my $CacheObject            = $Kernel::OM->Get('Kernel::System::Cache');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $YAMLObject   = $Kernel::OM->Get('Kernel::System::YAML');
+    my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
 
     $Self->{Subaction} = $ParamObject->GetParam( Param => 'Subaction' ) || '';
 
@@ -111,7 +109,6 @@ sub Run {
             return $HTML;
         }
 
-        # TODO think about if templates should be selectable as well
         # check required parameters
         my @QueuesSelected            = $ParamObject->GetArray( Param => 'Queues' );
         my $OverwriteExistingEntities = $ParamObject->GetParam( Param => 'OverwriteExistingEntities' ) || 0;
@@ -128,18 +125,18 @@ sub Run {
 
             my %QueuesImport;
             QUEUENAME:
-            for my $QueueName ( keys $ImportData->{Queues}->%* ) {
+            for my $QueueName ( keys $ImportData->{QueueTemplates}->%* ) {
 
                 my $Selected = grep { $QueueName eq $_ } @QueuesSelected;
                 next QUEUENAME if !$Selected;
 
-                next QUEUENAME if !IsHashRefWithData( $ImportData->{Queues}{$QueueName} );
+                next QUEUENAME if !IsHashRefWithData( $ImportData->{QueueTemplates}{$QueueName} );
 
-                $QueuesImport{$QueueName} = $ImportData->{Queues}{$QueueName};
+                $QueuesImport{$QueueName} = $ImportData->{QueueTemplates}{$QueueName};
             }
 
-            $QueueObject->ImportQueues(
-                Queues                    => \%QueuesImport,
+            $QueueObject->ImportQueueTemplates(
+                QueueTemplates            => \%QueuesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
             );
         }
@@ -157,18 +154,10 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Export' ) {
 
-        # get assigned templates
-        my %Member = $QueueObject->QueueStandardTemplateMemberList(
-            QueueID => 1,
-        );
-        use Data::Dx;
-        Dx %Member;
-
         return $Self->_Mask(
             %Param,
             Type => $Self->{Subaction},
         );
-
     }
 
     # ------------------------------------------------------------ #
@@ -184,7 +173,7 @@ sub Run {
 
         if (@Queues) {
 
-            $Data{Queues} = $QueueObject->ExportQueues(
+            $Data{QueueTemplates} = $QueueObject->ExportQueueTemplates(
                 Queues => \@Queues,
             );
         }
@@ -251,21 +240,14 @@ sub _Mask {
 
     if ( !$Param{Data} ) {
 
-        $Param{Data}{Queues} = {};
+        $Param{Data}{QueueTemplates} = {};
 
         # export
         my %Queues = $QueueObject->QueueList(
             Valid => 0,
         );
 
-        # get queue data
-        for my $QueueID ( keys %Queues ) {
-            my %QueueData = $QueueObject->QueueGet(
-                ID => $QueueID,
-            );
-
-            $Param{Data}{Queues}{ $QueueData{Name} } = \%QueueData;
-        }
+        $Param{Data}{QueueTemplates} = { map { $_ => {} } values %Queues };
     }
 
     my $Output = $LayoutObject->Header();
@@ -278,7 +260,7 @@ sub _Mask {
 
     # output header
     $Output .= $LayoutObject->Output(
-        TemplateFile => 'AdminQueueImportExport',
+        TemplateFile => 'AdminQueueTemplatesImportExport',
         Data         => {
             %Param,
         },
@@ -292,31 +274,16 @@ sub _QueueShow {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
     # check if at least 1 dynamic field is registered in the system
-    if ( IsHashRefWithData( $Param{Data}{Queues} ) ) {
+    if ( IsHashRefWithData( $Param{Data}{QueueTemplates} ) ) {
 
         my @QueuesAlreadyUsed;
 
         QUEUENAME:
-        for my $QueueName ( keys $Param{Data}{Queues}->%* ) {
+        for my $QueueName ( keys $Param{Data}{QueueTemplates}->%* ) {
 
-            my $QueueData = $Param{Data}{Queues}{$QueueName};
-
-            push @QueuesAlreadyUsed, $QueueData->{Name};
-
-            next QUEUENAME if !IsHashRefWithData($QueueData);
-
-            # convert ValidID to Validity string
-            my $Valid = $QueueData->{Valid} || $ValidObject->ValidLookup(
-                ValidID => $QueueData->{ValidID},
-            );
-
-            my %QueueData = (
-                %{$QueueData},
-                Valid => $Valid,
-            );
+            push @QueuesAlreadyUsed, $QueueName;
 
             for my $Blocks ( 'QueuesRow', 'QueueCheckbox', $Param{Type} ) {
 
@@ -324,7 +291,7 @@ sub _QueueShow {
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {
-                        %QueueData,
+                        Name => $QueueName,
                     },
                 );
             }

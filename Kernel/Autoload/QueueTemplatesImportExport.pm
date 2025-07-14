@@ -68,104 +68,14 @@ sub ExportQueueTemplates {
             next QUEUEID unless $QueueFilter{ $QueueData{Name} };
         }
 
-        # translate IDs into names or name-like identifiers
-        my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
-        my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
-        my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
-        my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
-        my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
-        my %FollowUpOptions     = $QueueObject->GetFollowUpOptionList(
-            Valid => 0,
+        # get assigned templates
+        my %QueueTemplates = $QueueObject->QueueStandardTemplateMemberList(
+            QueueID => $QueueID,
         );
 
-        ATTRIBUTE:
-        for my $Attribute ( keys %QueueData ) {
+        my @QueueTemplates = values %QueueTemplates;
 
-            next ATTRIBUTE unless $Attribute =~ /ID/;
-
-            if ( $Attribute eq 'ValidID' ) {
-                my $Valid = $ValidObject->ValidLookup(
-                    ValidID => $QueueData{ValidID},
-                );
-                $QueueData{Valid} = $Valid;
-                delete $QueueData{ValidID};
-            }
-            elsif ( $Attribute eq 'FollowUpID' ) {
-                $QueueData{FollowUp} = $FollowUpOptions{ $QueueData{FollowUpID} };
-                delete $QueueData{FollowUpID};
-            }
-            elsif ( $Attribute eq 'GroupID' ) {
-                my $Group = $GroupObject->GroupLookup(
-                    GroupID => $QueueData{GroupID},
-                );
-                $QueueData{Group} = $Group;
-                delete $QueueData{GroupID};
-            }
-            elsif ( $Attribute eq 'SalutationID' ) {
-                my %Salutation = $SalutationObject->SalutationGet(
-                    ID => $QueueData{SalutationID},
-                );
-
-                # transform IDs into names and clean up unnecessary attributes
-                $Salutation{Valid} = $ValidObject->ValidLookup(
-                    ValidID => $Salutation{ValidID},
-                );
-                delete $Salutation{ValidID};
-
-                delete $Salutation{ChangeTime};
-                delete $Salutation{CreateTime};
-                delete $Salutation{ID};
-
-                $QueueData{Salutation} = \%Salutation;
-                delete $QueueData{SalutationID};
-            }
-            elsif ( $Attribute eq 'SignatureID' ) {
-                my %Signature = $SignatureObject->SignatureGet(
-                    ID => $QueueData{SignatureID},
-                );
-
-                # transform IDs into names and clean up unnecessary attributes
-                $Signature{Valid} = $ValidObject->ValidLookup(
-                    ValidID => $Signature{ValidID},
-                );
-                delete $Signature{ValidID};
-
-                delete $Signature{ChangeTime};
-                delete $Signature{CreateTime};
-                delete $Signature{ID};
-
-                $QueueData{Signature} = \%Signature;
-                delete $QueueData{SignatureID};
-            }
-            elsif ( $Attribute eq 'SystemAddressID' ) {
-                my %SystemAddress = $SystemAddressObject->SystemAddressGet(
-                    ID => $QueueData{SystemAddressID},
-                );
-
-                # transform IDs into names and clean up unnecessary attributes
-                $SystemAddress{Valid} = $ValidObject->ValidLookup(
-                    ValidID => $SystemAddress{ValidID},
-                );
-                delete $SystemAddress{ValidID};
-                $SystemAddress{Queue} = $QueueList{ $SystemAddress{QueueID} };
-                delete $SystemAddress{QueueID};
-
-                delete $SystemAddress{ChangeTime};
-                delete $SystemAddress{CreateTime};
-                delete $SystemAddress{ID};
-
-                $QueueData{SystemAddress} = \%SystemAddress;
-                delete $QueueData{SystemAddressID};
-            }
-        }
-
-        delete $QueueData{ChangeTime};
-        delete $QueueData{CreateTime};
-        delete $QueueData{Email};
-        delete $QueueData{QueueID};
-        delete $QueueData{Realname};
-
-        $ExportData{ $QueueData{Name} } = \%QueueData;
+        $ExportData{ $QueueData{Name} } = \@QueueTemplates;
     }
 
     return \%ExportData;
