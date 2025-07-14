@@ -25,6 +25,13 @@ use warnings;
 use v5.24;
 use utf8;
 
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::VariableCheck qw(IsArrayRefWithData);
+
 our @ObjectDependencies = (
     'Kernel::System::Group',
     'Kernel::System::Valid',
