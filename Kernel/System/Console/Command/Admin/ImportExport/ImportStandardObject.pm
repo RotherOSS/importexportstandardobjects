@@ -115,6 +115,11 @@ sub Run {
                 @_,
             );
         },
+        RoleGroup => sub {
+            return $GroupObject->ImportRoleGroups(
+                @_,
+            );
+        },
         Template => sub {
             return $StandardTemplateObject->ImportTemplates(
                 @_,

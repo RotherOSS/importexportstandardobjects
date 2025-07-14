@@ -103,9 +103,9 @@ sub ImportRoleGroups {
     my %RoleLookup = reverse %RoleList;
 
     ROLENAME:
-    for my $RoleName ( keys $Param{Roles}->%* ) {
+    for my $RoleName ( keys $Param{RoleGroups}->%* ) {
 
-        my $RoleData = $Param{Roles}{$RoleName};
+        my $RoleData = $Param{RoleGroups}{$RoleName};
 
         next ROLENAME unless IsHashRefWithData($RoleData);
 

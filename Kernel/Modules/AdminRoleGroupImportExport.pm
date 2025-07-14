@@ -120,22 +120,22 @@ sub Run {
         # ------------------------------------------------------------ #
         # Import RoleGroups
         # ------------------------------------------------------------ #
-        if ( IsHashRefWithData( $ImportData->{Roles} ) ) {
+        if ( IsHashRefWithData( $ImportData->{RoleGroups} ) ) {
 
             my %RolesImport;
             ROLENAME:
-            for my $RoleName ( keys $ImportData->{Roles}->%* ) {
+            for my $RoleName ( keys $ImportData->{RoleGroups}->%* ) {
 
                 my $Selected = grep { $RoleName eq $_ } @RolesSelected;
 
                 next ROLENAME if !$Selected;
-                next ROLENAME if !IsHashRefWithData( $ImportData->{Roles}{$RoleName} );
+                next ROLENAME if !IsHashRefWithData( $ImportData->{RoleGroups}{$RoleName} );
 
-                $RolesImport{$RoleName} = $ImportData->{Roles}{$RoleName};
+                $RolesImport{$RoleName} = $ImportData->{RoleGroups}{$RoleName};
             }
 
             $GroupObject->ImportRoleGroups(
-                Roles                     => \%RolesImport,
+                RoleGroups                => \%RolesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
@@ -174,7 +174,7 @@ sub Run {
 
         if (@Roles) {
 
-            $Data{Roles} = $GroupObject->ExportRoleGroups(
+            $Data{RoleGroups} = $GroupObject->ExportRoleGroups(
                 Roles => \@Roles,
             );
         }
@@ -241,14 +241,14 @@ sub _Mask {
 
     if ( !$Param{Data} ) {
 
-        $Param{Data}{Roles} = {};
+        $Param{Data}{RoleGroups} = {};
 
         # export
         my %Roles = $GroupObject->RoleList(
             Valid => 0,
         );
 
-        $Param{Data}{Roles} = { map { $_ => {} } values %Roles };
+        $Param{Data}{RoleGroups} = { map { $_ => {} } values %Roles };
     }
 
     my $Output = $LayoutObject->Header();
@@ -276,12 +276,12 @@ sub _RoleShow {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( IsHashRefWithData( $Param{Data}{Roles} ) ) {
+    if ( IsHashRefWithData( $Param{Data}{RoleGroups} ) ) {
 
         my @RolesAlreadyUsed;
 
         ROLENAME:
-        for my $RoleName ( keys $Param{Data}{Roles}->%* ) {
+        for my $RoleName ( keys $Param{Data}{RoleGroups}->%* ) {
 
             push @RolesAlreadyUsed, $RoleName;
 
