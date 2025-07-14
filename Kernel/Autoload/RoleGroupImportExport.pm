@@ -25,6 +25,13 @@ use warnings;
 use v5.24;
 use utf8;
 
+# core modules
+
+# CPAN modules
+
+# OTOBO modules
+use Kernel::System::VariableCheck qw(IsArrayRefWithData IsHashRefWithData);
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Group',
@@ -42,7 +49,8 @@ sub ExportRoleGroups {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
-    my %RoleList = $GroupObject->RoleList(
+    my $PermissionTypes = $ConfigObject->Get('System::Permission');
+    my %RoleList        = $GroupObject->RoleList(
         Valid => 0,
     );
 
@@ -59,7 +67,7 @@ sub ExportRoleGroups {
         }
 
         my %Types;
-        for my $Type ( @{ $ConfigObject->Get('System::Permission') } ) {
+        for my $Type ( $PermissionTypes->@* ) {
             my %Data = $GroupObject->PermissionRoleGroupGet(
                 RoleID => $RoleID,
                 Type   => $Type,
@@ -81,8 +89,14 @@ sub ImportRoleGroups {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
-    my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
-    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+
+    my $PermissionTypes = $ConfigObject->Get('System::Permission');
+    my %GroupList       = $GroupObject->GroupList(
+        Valid => 0,
+    );
+    my %GroupLookup = reverse %GroupList;
     my %RoleList    = $GroupObject->RoleList(
         Valid => 0,
     );
@@ -90,33 +104,52 @@ sub ImportRoleGroups {
 
     ROLENAME:
     for my $RoleName ( keys $Param{Roles}->%* ) {
+
         my $RoleData = $Param{Roles}{$RoleName};
 
-        my $RoleID = $RoleLookup{ $RoleData->{Name} };
+        next ROLENAME unless IsHashRefWithData($RoleData);
+
+        my $RoleID = $RoleLookup{$RoleName};
+
+        # skip roles which do not exist on the system
+        next ROLENAME unless $RoleID;
+
+        # traverse permission-group structure to be able to set new values
+        my %PermissionsForGroup;
+        PERMISSIONTYPE:
+        for my $PermissionType ( $PermissionTypes->@* ) {
+
+            next PERMISSIONTYPE unless IsArrayRefWithData( $RoleData->{$PermissionType} );
+
+            GROUPNAME:
+            for my $GroupName ( $RoleData->{$PermissionType}->@* ) {
+
+                my $GroupID = $GroupLookup{$GroupName};
+
+                next GROUPNAME unless $GroupID;
+
+                $PermissionsForGroup{$GroupName} //= {};
+                $PermissionsForGroup{$GroupName}{$PermissionType} = 1;
+            }
+        }
+
+        for my $CurrentGroup ( keys %PermissionsForGroup ) {
+
+            my $GroupID     = $GroupLookup{$CurrentGroup};
+            my $Permissions = $PermissionsForGroup{$CurrentGroup};
+
+            my $Success = $GroupObject->PermissionGroupRoleAdd(
+                GID        => $GroupID,
+                RID        => $RoleID,
+                Permission => $Permissions,
+                UserID     => $UserID,
+            );
+
+            next ROLENAME unless $Success;
+        }
 
         # skip if role with same name exists and overwrite is not set
         next ROLENAME if ( !$Param{OverwriteExistingEntities} && $RoleID );
-
-        # translate named data back to IDs
-        $RoleData->{ValidID} = $ValidObject->ValidLookup(
-            Valid => $RoleData->{Valid},
-        );
-
-        if ($RoleID) {
-            my $Success = $GroupObject->RoleUpdate(
-                $RoleData->%*,
-                ID     => $RoleID,
-                UserID => $UserID,
-            );
-            return unless $Success;
-        }
-        else {
-            my $RoleID = $GroupObject->RoleAdd(
-                $RoleData->%*,
-                UserID => $UserID,
-            );
-            return unless $RoleID;
-        }
     }
 
     return 1;

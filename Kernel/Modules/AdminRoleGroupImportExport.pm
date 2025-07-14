@@ -31,7 +31,6 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::Group',
-    'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::YAML',
 );
@@ -128,8 +127,8 @@ sub Run {
             for my $RoleName ( keys $ImportData->{Roles}->%* ) {
 
                 my $Selected = grep { $RoleName eq $_ } @RolesSelected;
-                next ROLENAME if !$Selected;
 
+                next ROLENAME if !$Selected;
                 next ROLENAME if !IsHashRefWithData( $ImportData->{Roles}{$RoleName} );
 
                 $RolesImport{$RoleName} = $ImportData->{Roles}{$RoleName};
@@ -138,6 +137,7 @@ sub Run {
             $GroupObject->ImportRoleGroups(
                 Roles                     => \%RolesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 
@@ -248,14 +248,7 @@ sub _Mask {
             Valid => 0,
         );
 
-        # get role data
-        for my $RoleID ( keys %Roles ) {
-            my %RoleData = $GroupObject->RoleGet(
-                ID => $RoleID,
-            );
-
-            $Param{Data}{Roles}{ $RoleData{Name} } = \%RoleData;
-        }
+        $Param{Data}{Roles} = { map { $_ => {} } values %Roles };
     }
 
     my $Output = $LayoutObject->Header();
@@ -282,7 +275,6 @@ sub _RoleShow {
     my ( $Self, %Param ) = @_;
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
     if ( IsHashRefWithData( $Param{Data}{Roles} ) ) {
 
@@ -291,21 +283,7 @@ sub _RoleShow {
         ROLENAME:
         for my $RoleName ( keys $Param{Data}{Roles}->%* ) {
 
-            my $RoleData = $Param{Data}{Roles}{$RoleName};
-
-            push @RolesAlreadyUsed, $RoleData->{Name};
-
-            next ROLENAME if !IsHashRefWithData($RoleData);
-
-            # convert ValidID to Validity string
-            my $Valid = $RoleData->{Valid} || $ValidObject->ValidLookup(
-                ValidID => $RoleData->{ValidID},
-            );
-
-            my %RoleData = (
-                %{$RoleData},
-                Valid => $Valid,
-            );
+            push @RolesAlreadyUsed, $RoleName;
 
             for my $Blocks ( 'RolesRow', 'RoleCheckbox', $Param{Type} ) {
 
@@ -313,7 +291,7 @@ sub _RoleShow {
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {
-                        %RoleData,
+                        Name => $RoleName,
                     },
                 );
             }
