@@ -95,8 +95,6 @@
                                     [% Translate("Fields") | html %]
                                 </th>
                                 <th>[% Translate("Name") | html %]</th>
-                                <th>[% Translate("Comment") | html %]</th>
-                                <th>[% Translate("Validity") | html %]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -114,12 +112,6 @@
 [% RenderBlockStart("Export") %]
                                     <a href="[% Env("Baselink") %]Action=AdminRole;Subaction=Change;RoleID=[% Data.RoleID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
 [% RenderBlockEnd("Export") %]
-                                </td>
-                                <td>
-                                    <div>[% Translate(Data.Comment) | html %]</div>
-                                </td>
-                                <td>
-                                    <div>[% Translate(Data.Valid) | html %]</div>
                                 </td>
                             </tr>
 [% RenderBlockEnd("RolesRow") %]
