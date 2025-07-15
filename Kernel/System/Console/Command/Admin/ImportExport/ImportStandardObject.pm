@@ -96,6 +96,7 @@ sub Run {
     my $PackageObject          = $Kernel::OM->Get('Kernel::System::Package');
     my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
     my $ServiceObject          = $Kernel::OM->Get('Kernel::System::Service');
+    my $SLAObject              = $Kernel::OM->Get('Kernel::System::SLA');
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
     my $YAMLObject             = $Kernel::OM->Get('Kernel::System::YAML');
 
@@ -143,6 +144,11 @@ sub Run {
     if ( $PackageObject->PackageIsInstalled( Name => 'ServiceCatalog' ) ) {
         $ImportSubMapping{Service} = sub {
             return $ServiceObject->ImportServices(
+                @_,
+            );
+        };
+        $ImportSubMapping{SLA} = sub {
+            return $SLAObject->ImportSLAs(
                 @_,
             );
         };
