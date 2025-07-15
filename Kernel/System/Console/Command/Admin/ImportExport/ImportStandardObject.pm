@@ -32,7 +32,9 @@ our @ObjectDependencies = (
     'Kernel::System::GenericAgent',
     'Kernel::System::Group',
     'Kernel::System::Main',
+    'Kernel::System::Package',
     'Kernel::System::Queue',
+    'Kernel::System::Service',
     'Kernel::System::StandardTemplate',
     'Kernel::System::YAML',
 );
@@ -40,7 +42,9 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Import data for a standard object. Currently supported object types are: GenericAgent, Group, Queue, Role, Template.');
+    $Self->Description(
+        "Import data for a standard object. Currently supported object types are: GenericAgent, Group, Queue, Role, Template.\n\nServices and SLAs are supported in case a compatible version of the ServiceCatalog package is installed."
+    );
     $Self->AddOption(
         Name        => 'update',
         Description => "Flag if existing objects should be overwritten.",
@@ -89,7 +93,9 @@ sub Run {
     # get (probably) necessary objects
     my $GenericAgentObject     = $Kernel::OM->Get('Kernel::System::GenericAgent');
     my $GroupObject            = $Kernel::OM->Get('Kernel::System::Group');
+    my $PackageObject          = $Kernel::OM->Get('Kernel::System::Package');
     my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject          = $Kernel::OM->Get('Kernel::System::Service');
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
     my $YAMLObject             = $Kernel::OM->Get('Kernel::System::YAML');
 
@@ -131,6 +137,16 @@ sub Run {
             );
         },
     );
+
+    # check if ServiceCatalog is installed and add Service to mapping, if so
+    #   implicitly assuming that it is a compatible version of the package
+    if ( $PackageObject->PackageIsInstalled( Name => 'ServiceCatalog' ) ) {
+        $ImportSubMapping{Service} = sub {
+            return $ServiceObject->ImportServices(
+                @_,
+            );
+        };
+    }
 
     # fetch params
     my $File                      = $Self->GetArgument('source') || '';
