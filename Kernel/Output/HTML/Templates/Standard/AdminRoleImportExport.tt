@@ -112,7 +112,7 @@
                                     [% Data.Name %]
 [% RenderBlockEnd("Import") %]
 [% RenderBlockStart("Export") %]
-                                    <a href="[% Env("Baselink") %]Action=AdminRole;Subaction=Change;RoleID=[% Data.RoleID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
+                                    <a href="[% Env("Baselink") %]Action=AdminRole;Subaction=Change;ID=[% Data.ID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
 [% RenderBlockEnd("Export") %]
                                 </td>
                                 <td>

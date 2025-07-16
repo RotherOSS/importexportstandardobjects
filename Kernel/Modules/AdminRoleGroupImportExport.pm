@@ -274,6 +274,7 @@ sub _Mask {
 sub _RoleShow {
     my ( $Self, %Param ) = @_;
 
+    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( IsHashRefWithData( $Param{Data}{RoleGroups} ) ) {
@@ -292,6 +293,9 @@ sub _RoleShow {
                     Name => $Blocks,
                     Data => {
                         Name => $RoleName,
+                        ID   => $GroupObject->RoleLookup(
+                            Role => $RoleName,
+                        ),
                     },
                 );
             }

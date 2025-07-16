@@ -274,6 +274,7 @@ sub _Mask {
 sub _QueueShow {
     my ( $Self, %Param ) = @_;
 
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # check if at least 1 dynamic field is registered in the system
@@ -292,7 +293,10 @@ sub _QueueShow {
                 $LayoutObject->Block(
                     Name => $Blocks,
                     Data => {
-                        Name => $QueueName,
+                        Name    => $QueueName,
+                        QueueID => $QueueObject->QueueLookup(
+                            Queue => $QueueName,
+                        ),
                     },
                 );
             }

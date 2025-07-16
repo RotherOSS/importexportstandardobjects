@@ -110,7 +110,7 @@
                                     [% Data.Name %]
 [% RenderBlockEnd("Import") %]
 [% RenderBlockStart("Export") %]
-                                    <a href="[% Env("Baselink") %]Action=AdminQueueTemplates;Subaction=Change;QueueID=[% Data.QueueID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
+                                    <a href="[% Env("Baselink") %]Action=AdminQueue;Subaction=Change;QueueID=[% Data.QueueID | uri %]" title="[% Data.Name | html %]" class="MasterActionLink">[% Data.Name %]</a>
 [% RenderBlockEnd("Export") %]
                                 </td>
                             </tr>
