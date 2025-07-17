@@ -138,6 +138,7 @@ sub Run {
             $StandardTemplateObject->ImportTemplates(
                 Templates                 => \%TemplatesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 

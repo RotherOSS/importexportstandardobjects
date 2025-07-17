@@ -138,6 +138,7 @@ sub Run {
             $GroupObject->ImportRoles(
                 Roles                     => \%RolesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 

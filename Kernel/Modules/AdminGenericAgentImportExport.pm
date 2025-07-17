@@ -137,6 +137,7 @@ sub Run {
             $GenericAgentObject->ImportGenericAgents(
                 GenericAgents             => \%GenericAgentsImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 
