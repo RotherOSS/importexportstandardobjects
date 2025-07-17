@@ -16,6 +16,7 @@
         <File Permission="660" Location="Custom/Kernel/Modules/AdminRole.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminRoleGroup.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminTemplate.pm" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminType.pm" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGenericAgent.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminQueue.tt" />
@@ -23,6 +24,7 @@
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRole.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminRoleGroup.tt" />
         <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminTemplate.tt" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminType.tt" />
         <File Permission="660" Location="Kernel/Autoload/GenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/GroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/QueueImportExport.pm" />
@@ -30,6 +32,7 @@
         <File Permission="660" Location="Kernel/Autoload/RoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/RoleGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/TemplateImportExport.pm" />
+        <File Permission="660" Location="Kernel/Autoload/TypeImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportStandardObjects.xml" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
@@ -38,6 +41,7 @@
         <File Permission="660" Location="Kernel/Modules/AdminRoleImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminRoleGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminTemplateImportExport.pm" />
+        <File Permission="660" Location="Kernel/Modules/AdminTypeImportExport.pm" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGenericAgentImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminQueueImportExport.tt" />
@@ -45,6 +49,7 @@
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminRoleGroupImportExport.tt" />
         <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminTemplateImportExport.tt" />
+        <File Permission="660" Location="Kernel/Output/HTML/Templates/Standard/AdminTypeImportExport.tt" />
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportACL.pm" />
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportDynamicField.pm" />
         <File Permission="660" Location="Kernel/System/Console/Command/Admin/ImportExport/ImportProcess.pm" />
@@ -56,5 +61,6 @@
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.RoleImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.RoleGroupImportExport.js" />
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.TemplateImportExport.js" />
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.TypeImportExport.js" />
     </Filelist>
 </otobo_package>

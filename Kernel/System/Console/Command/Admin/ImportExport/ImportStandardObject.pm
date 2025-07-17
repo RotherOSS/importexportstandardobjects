@@ -36,6 +36,7 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::Service',
     'Kernel::System::StandardTemplate',
+    'Kernel::System::Type',
     'Kernel::System::YAML',
 );
 
@@ -98,6 +99,7 @@ sub Run {
     my $ServiceObject          = $Kernel::OM->Get('Kernel::System::Service');
     my $SLAObject              = $Kernel::OM->Get('Kernel::System::SLA');
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
+    my $TypeObject             = $Kernel::OM->Get('Kernel::System::Type');
     my $YAMLObject             = $Kernel::OM->Get('Kernel::System::YAML');
 
     # object to sub mapping
@@ -134,6 +136,11 @@ sub Run {
         },
         Template => sub {
             return $StandardTemplateObject->ImportTemplates(
+                @_,
+            );
+        },
+        Type => sub {
+            return $TypeObject->ImportTypes(
                 @_,
             );
         },
