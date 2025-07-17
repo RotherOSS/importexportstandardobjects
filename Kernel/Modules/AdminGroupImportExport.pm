@@ -138,6 +138,7 @@ sub Run {
             $GroupObject->ImportGroups(
                 Groups                    => \%GroupsImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 

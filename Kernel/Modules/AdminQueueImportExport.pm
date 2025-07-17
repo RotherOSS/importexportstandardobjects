@@ -138,6 +138,7 @@ sub Run {
             $QueueObject->ImportQueues(
                 Queues                    => \%QueuesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
+                UserID                    => $Self->{UserID},
             );
         }
 
