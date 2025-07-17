@@ -44,7 +44,7 @@ sub Configure {
     my ( $Self, %Param ) = @_;
 
     $Self->Description(
-        "Import data for a standard object. Currently supported object types are: GenericAgent, Group, Queue, Role, Template.\n\nServices and SLAs are supported in case a compatible version of the ServiceCatalog package is installed."
+        "Import data for a standard object. Currently supported object types are:\n\n\tGenericAgent\n\tGroup\n\tQueue\n\tQueue-Template relations\n\tRole\n\tRole-Group relations\n\tTemplate\n\tType\n\nServices and SLAs are supported in case a compatible version of the ServiceCatalog package is installed."
     );
     $Self->AddOption(
         Name        => 'update',
