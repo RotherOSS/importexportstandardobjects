@@ -35,6 +35,7 @@ our @ObjectDependencies = (
     'Kernel::System::Package',
     'Kernel::System::Queue',
     'Kernel::System::Service',
+    'Kernel::System::SLA',
     'Kernel::System::StandardTemplate',
     'Kernel::System::Type',
     'Kernel::System::YAML',
@@ -196,6 +197,8 @@ sub Run {
     if ( !$ImportSubMapping{$ObjectType} ) {
         $Error->("Object type '$ObjectType' is not importable via this console command.");
     }
+
+    $Self->Print("<yellow>Importing objects of type $ObjectType.</yellow>\n");
 
     my %ImportData;
     if ( IsHashRefWithData( $YAMLData->{$ObjectType} ) ) {
