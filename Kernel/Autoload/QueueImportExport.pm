@@ -30,7 +30,7 @@ use utf8;
 # CPAN modules
 
 # OTOBO modules
-use Kernel::System::VariableCheck qw(IsArrayRefWithData);
+use Kernel::System::VariableCheck qw(IsArrayRefWithData IsHashRefWithData);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -203,6 +203,9 @@ sub ImportQueues {
     );
     my %SystemAddressLookup = reverse %SystemAddressList;
 
+    # store system addresses and handle them afterwards to avoid collisions
+    my %SystemAddresses;
+
     QUEUENAME:
     for my $QueueName ( keys $Param{Queues}->%* ) {
         my $QueueData = $Param{Queues}{$QueueName};
@@ -261,6 +264,7 @@ sub ImportQueues {
                     %Salutation,
                     UserID => $UserID,
                 );
+                $SalutationLookup{ $Salutation{Name} } = $SalutationID;
             }
             $QueueData->{SalutationID} = $SalutationID;
         }
@@ -289,6 +293,7 @@ sub ImportQueues {
                     %Signature,
                     UserID => $UserID,
                 );
+                $SignatureLookup{ $Signature{Name} } = $SignatureID;
             }
             $QueueData->{SignatureID} = $SignatureID;
         }
@@ -334,6 +339,7 @@ sub ImportQueues {
                         %SystemAddress,
                         UserID => $UserID,
                     );
+                    $SystemAddressLookup{ $SystemAddress{Name} } = $SystemAddressID;
                 }
                 $QueueData->{SystemAddressID} = $SystemAddressID;
             }
@@ -352,48 +358,63 @@ sub ImportQueues {
             );
             return unless $QueueID;
 
-            # system address needs QueueID as attribute
             if ( $QueueData->{SystemAddress} ) {
-                my %SystemAddress = $QueueData->{SystemAddress}->%*;
-
-                # transform names back to IDs where necessary
-                $SystemAddress{ValidID} = $ValidObject->ValidLookup(
-                    Valid => $SystemAddress{Valid},
-                );
-
-                # TODO use $QueueID instead...?
-                $SystemAddress{QueueID} = $QueueObject->QueueLookup(
-                    Queue => $SystemAddress{Queue},
-                );
-
-                my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
-
-                if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
-                    my $Success = $SystemAddressObject->SystemAddressUpdate(
-                        %SystemAddress,
-                        ID     => $SystemAddressLookup{ $SystemAddress{Name} },
-                        UserID => $UserID,
-                    );
-
-                    next QUEUENAME unless $Success;
-                }
-                elsif ( !$SystemAddressID ) {
-                    $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
-                        %SystemAddress,
-                        UserID => $UserID,
-                    );
-                }
-
-                # update queue and set system address id
-                my $Success = $QueueObject->QueueUpdate(
-                    $QueueData->%*,
-                    QueueID         => $QueueID,
-                    SystemAddressID => $SystemAddressID,
-                    UserID          => $UserID,
-                );
-                return unless $Success;
+                $SystemAddresses{ $QueueData->{Name} } = $QueueData->{SystemAddress};
             }
         }
+    }
+
+    # refresh system address list and lookup
+    %SystemAddressList = $SystemAddressObject->SystemAddressList(
+        Valid => 0,
+    );
+    %SystemAddressLookup = reverse %SystemAddressList;
+
+    # create or update system addresses
+    QUEUENAME:
+    for my $QueueName ( keys %SystemAddresses ) {
+
+        my %SystemAddress = $SystemAddresses{$QueueName}->%*;
+        my %QueueData     = $QueueObject->QueueGet(
+            Name => $QueueName,
+        );
+
+        # transform names back to IDs where necessary
+        $SystemAddress{ValidID} = $ValidObject->ValidLookup(
+            Valid => $SystemAddress{Valid},
+        );
+
+        $SystemAddress{QueueID} = $QueueObject->QueueLookup(
+            Queue => $SystemAddress{Queue},
+        );
+
+        my $SystemAddressID = $SystemAddressLookup{ $SystemAddress{Name} };
+
+        if ( $SystemAddressID && $Param{OverwriteExistingEntities} ) {
+            my $Success = $SystemAddressObject->SystemAddressUpdate(
+                %SystemAddress,
+                ID     => $SystemAddressLookup{ $SystemAddress{Name} },
+                UserID => $UserID,
+            );
+
+            next QUEUENAME unless $Success;
+        }
+        elsif ( !$SystemAddressID ) {
+
+            $SystemAddressID = $SystemAddressObject->SystemAddressAdd(
+                %SystemAddress,
+                UserID => $UserID,
+            );
+            $SystemAddressLookup{ $SystemAddress{Name} } = $SystemAddressID;
+        }
+
+        # update queue and set system address id
+        my $Success = $QueueObject->QueueUpdate(
+            %QueueData,
+            SystemAddressID => $SystemAddressID,
+            UserID          => $UserID,
+        );
+        return unless $Success;
     }
 
     return 1;
