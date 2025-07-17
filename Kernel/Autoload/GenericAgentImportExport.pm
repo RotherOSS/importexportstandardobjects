@@ -52,6 +52,7 @@ sub ExportGenericAgents {
         %GenericAgentFilter = map { $_ => 1 } $Param{GenericAgents}->@*;
     }
 
+    # get necessary objects
     my $GenericAgentObject = $Kernel::OM->Get('Kernel::System::GenericAgent');
     my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
@@ -62,6 +63,7 @@ sub ExportGenericAgents {
     my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
+    # fetch lookup lists
     my %GenericAgentList = $GenericAgentObject->JobList();
 
     my %ExportData;
@@ -80,19 +82,8 @@ sub ExportGenericAgents {
         ATTRIBUTE:
         for my $Attribute ( keys %GenericAgentData ) {
 
-            if ( $Attribute eq 'LockIDs' ) {
-                if ( IsArrayRefWithData( $GenericAgentData{LockIDs} ) ) {
-                    my @Locks;
-                    for my $LockID ( $GenericAgentData{LockIDs}->@* ) {
-                        push @Locks, $LockObject->LockLookup(
-                            LockID => $LockID,
-                        );
-                    }
-                    $GenericAgentData{Locks} = \@Locks;
-                    delete $GenericAgentData{LockIDs};
-                }
-            }
-            elsif ( $Attribute eq 'NewLockID' ) {
+            # single-value attributes
+            if ( $Attribute eq 'NewLockID' ) {
                 if ( $GenericAgentData{NewLockID} ) {
                     $GenericAgentData{NewLock} = $LockObject->LockLookup(
                         LockID => $GenericAgentData{NewLockID},
@@ -154,6 +145,20 @@ sub ExportGenericAgents {
                         TypeID => $GenericAgentData{NewTypeID},
                     );
                     delete $GenericAgentData{NewTypeID};
+                }
+            }
+
+            # array attributes
+            elsif ( $Attribute eq 'LockIDs' ) {
+                if ( IsArrayRefWithData( $GenericAgentData{LockIDs} ) ) {
+                    my @Locks;
+                    for my $LockID ( $GenericAgentData{LockIDs}->@* ) {
+                        push @Locks, $LockObject->LockLookup(
+                            LockID => $LockID,
+                        );
+                    }
+                    $GenericAgentData{Locks} = \@Locks;
+                    delete $GenericAgentData{LockIDs};
                 }
             }
             elsif ( $Attribute eq 'OwnerIDs' ) {
@@ -253,6 +258,7 @@ sub ImportGenericAgents {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $GenericAgentObject = $Kernel::OM->Get('Kernel::System::GenericAgent');
     my $LockObject         = $Kernel::OM->Get('Kernel::System::Lock');
     my $PriorityObject     = $Kernel::OM->Get('Kernel::System::Priority');
@@ -262,7 +268,9 @@ sub ImportGenericAgents {
     my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
     my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
-    my %GenericAgentList   = $GenericAgentObject->JobList();
+
+    # fetch lookup lists
+    my %GenericAgentList = $GenericAgentObject->JobList();
 
     GENERICAGENTNAME:
     for my $GenericAgentName ( keys $Param{GenericAgents}->%* ) {
@@ -276,15 +284,7 @@ sub ImportGenericAgents {
         next GENERICAGENTNAME if ( !$Param{OverwriteExistingEntities} && $GenericAgentCheckName );
 
         # translate named data back to IDs
-        if ( IsArrayRefWithData( $GenericAgentData->{Locks} ) ) {
-            my @LockIDs;
-            for my $Lock ( $GenericAgentData->{Locks}->@* ) {
-                push @LockIDs, $LockObject->LockLookup(
-                    Lock => $Lock,
-                );
-            }
-            $GenericAgentData->{LockIDs} = \@LockIDs;
-        }
+        # single-value attributes
         if ( $GenericAgentData->{NewLock} ) {
             $GenericAgentData->{NewLockID} = $LockObject->LockLookup(
                 Lock => $GenericAgentData->{NewLock},
@@ -324,6 +324,17 @@ sub ImportGenericAgents {
             $GenericAgentData->{NewTypeID} = $TypeObject->TypeLookup(
                 Type => $GenericAgentData->{NewType},
             );
+        }
+
+        # array attributes
+        if ( IsArrayRefWithData( $GenericAgentData->{Locks} ) ) {
+            my @LockIDs;
+            for my $Lock ( $GenericAgentData->{Locks}->@* ) {
+                push @LockIDs, $LockObject->LockLookup(
+                    Lock => $Lock,
+                );
+            }
+            $GenericAgentData->{LockIDs} = \@LockIDs;
         }
         if ( IsArrayRefWithData( $GenericAgentData->{Owners} ) ) {
             my @OwnerIDs;
@@ -389,6 +400,7 @@ sub ImportGenericAgents {
             $GenericAgentData->{TypeIDs} = \@TypeIDs;
         }
 
+        # update
         if ($GenericAgentCheckName) {
 
             # remove/clean up old profile stuff
@@ -405,6 +417,8 @@ sub ImportGenericAgents {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $GenericAgentID = $GenericAgentObject->JobAdd(
                 Name   => $GenericAgentData->{Name},
