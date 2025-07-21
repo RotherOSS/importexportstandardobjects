@@ -48,7 +48,7 @@ sub Configure {
     );
     $Self->AddArgument(
         Name        => 'source',
-        Description => "Specify the path to the file or directory which contains the data for importing.",
+        Description => "Specify the path to the file which contains the data for importing.",
         Required    => 1,
         ValueRegex  => qr/.*/,
     );
@@ -63,10 +63,6 @@ sub PreRun {
     if ( !$Source ) {
 
         # source is optional, even if an import without source is unsatisfying
-    }
-    elsif ( -d $Source ) {
-
-        # a directory is fine
     }
     elsif ( -r $Source ) {
 
@@ -121,6 +117,7 @@ sub Run {
                 $Self->Print(
                     "<red>Could not import dynamic field '$DFData->{DynamicFields}->{$DynamicField}->{Name}' - Dynamic field backend for FieldType '$DFData->{DynamicFields}->{$DynamicField}->{FieldType}' does not exists! Skipping it...</red>\n"
                 );
+
                 next DYNAMICFIELD;
             }
 
@@ -159,13 +156,5 @@ sub Run {
     $Self->Print("<green>Done.</green>\n");
     return $Self->ExitCodeOk();
 }
-
-# sub PostRun {
-#     my ( $Self, %Param ) = @_;
-#
-#     # This will be called after Run() (even in case of exceptions). Perform any cleanups here.
-#
-#     return;
-# }
 
 1;
