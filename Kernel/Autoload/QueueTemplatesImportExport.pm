@@ -47,8 +47,10 @@ sub ExportQueueTemplates {
         %QueueFilter = map { $_ => 1 } $Param{Queues}->@*;
     }
 
+    # get necessary objects
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
+    # fetch lookup lists
     my %QueueList = $QueueObject->QueueList(
         Valid => 0,
     );
@@ -83,9 +85,12 @@ sub ImportQueueTemplates {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $QueueObject            = $Kernel::OM->Get('Kernel::System::Queue');
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
-    my %QueueList              = $QueueObject->QueueList(
+
+    # fetch lookup lists
+    my %QueueList = $QueueObject->QueueList(
         Valid => 0,
     );
     my %QueueLookup          = reverse %QueueList;
@@ -100,6 +105,7 @@ sub ImportQueueTemplates {
 
         my $QueueID = $QueueLookup{$QueueName};
 
+        # skip queues which do not exist on the system
         next QUEUENAME unless $QueueID;
 
         TEMPLATENAME:

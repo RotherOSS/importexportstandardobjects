@@ -47,6 +47,7 @@ sub ExportGroups {
 
     # get necessary objects
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
 
     # fetch lookup lists
     my %GroupList = $GroupObject->GroupList(
@@ -66,8 +67,6 @@ sub ExportGroups {
         }
 
         # translate IDs into names or name-like identifiers
-        my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-
         ATTRIBUTE:
         for my $Attribute ( keys %GroupData ) {
 

@@ -46,9 +46,11 @@ sub ExportRoleGroups {
         %RoleFilter = map { $_ => 1 } $Param{Roles}->@*;
     }
 
+    # get necessary objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
+    # fetch lookup lists
     my $PermissionTypes = $ConfigObject->Get('System::Permission');
     my %RoleList        = $GroupObject->RoleList(
         Valid => 0,
@@ -89,9 +91,11 @@ sub ImportRoleGroups {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
+    # fetch lookup lists
     my $PermissionTypes = $ConfigObject->Get('System::Permission');
     my %GroupList       = $GroupObject->GroupList(
         Valid => 0,

@@ -45,8 +45,11 @@ sub ExportTypes {
         %TypeFilter = map { $_ => 1 } $Param{Types}->@*;
     }
 
-    my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
+    # get necessary objects
+    my $TypeObject  = $Kernel::OM->Get('Kernel::System::Type');
+    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
 
+    # fetch lookup lists
     my %TypeList = $TypeObject->TypeList(
         Valid => 0,
     );
@@ -64,8 +67,6 @@ sub ExportTypes {
         }
 
         # translate IDs into names or name-like identifiers
-        my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-
         ATTRIBUTE:
         for my $Attribute ( keys %TypeData ) {
 
@@ -80,6 +81,7 @@ sub ExportTypes {
             }
         }
 
+        # delete unneeded attributes to avoid bloating the export
         delete $TypeData{ChangeBy};
         delete $TypeData{ChangeTime};
         delete $TypeData{CreateBy};
@@ -97,9 +99,12 @@ sub ImportTypes {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
-    my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
+    # get necessary objects
+    my $TypeObject  = $Kernel::OM->Get('Kernel::System::Type');
     my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-    my %TypeList   = $TypeObject->TypeList(
+
+    # fetch lookup lists
+    my %TypeList = $TypeObject->TypeList(
         Valid => 0,
     );
     my %TypeLookup = reverse %TypeList;
@@ -118,6 +123,7 @@ sub ImportTypes {
             Valid => $TypeData->{Valid},
         );
 
+        # update
         if ($TypeID) {
             my $Success = $TypeObject->TypeUpdate(
                 $TypeData->%*,
@@ -126,6 +132,8 @@ sub ImportTypes {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $TypeID = $TypeObject->TypeAdd(
                 $TypeData->%*,

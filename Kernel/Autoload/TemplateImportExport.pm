@@ -45,8 +45,11 @@ sub ExportTemplates {
         %TemplateFilter = map { $_ => 1 } $Param{Templates}->@*;
     }
 
+    # get necessary objects
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
+    my $ValidObject            = $Kernel::OM->Get('Kernel::System::Valid');
 
+    # fetch lookup lists
     my %TemplateList = $StandardTemplateObject->StandardTemplateList(
         Valid => 0,
     );
@@ -64,8 +67,6 @@ sub ExportTemplates {
         }
 
         # translate IDs into names or name-like identifiers
-        my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-
         ATTRIBUTE:
         for my $Attribute ( keys %TemplateData ) {
 
@@ -80,6 +81,7 @@ sub ExportTemplates {
             }
         }
 
+        # delete unneeded attributes to avoid bloating the export
         delete $TemplateData{ChangeBy};
         delete $TemplateData{ChangeTime};
         delete $TemplateData{CreateBy};
@@ -97,9 +99,12 @@ sub ImportTemplates {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
     my $ValidObject            = $Kernel::OM->Get('Kernel::System::Valid');
-    my %TemplateList           = $StandardTemplateObject->StandardTemplateList(
+
+    # fetch lookup lists
+    my %TemplateList = $StandardTemplateObject->StandardTemplateList(
         Valid => 0,
     );
     my %TemplateLookup = reverse %TemplateList;
@@ -118,6 +123,7 @@ sub ImportTemplates {
             Valid => $TemplateData->{Valid},
         );
 
+        # update
         if ($TemplateID) {
             my $Success = $StandardTemplateObject->StandardTemplateUpdate(
                 $TemplateData->%*,
@@ -126,6 +132,8 @@ sub ImportTemplates {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $TemplateID = $StandardTemplateObject->StandardTemplateAdd(
                 $TemplateData->%*,

@@ -50,9 +50,19 @@ sub ExportQueues {
         %QueueFilter = map { $_ => 1 } $Param{Queues}->@*;
     }
 
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+    # get necessary objects
+    my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
+    my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
+    my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
+    my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+    my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
 
+    # fetch lookup lists
     my %QueueList = $QueueObject->QueueList(
+        Valid => 0,
+    );
+    my %FollowUpOptions = $QueueObject->GetFollowUpOptionList(
         Valid => 0,
     );
 
@@ -69,20 +79,12 @@ sub ExportQueues {
         }
 
         # translate IDs into names or name-like identifiers
-        my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
-        my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
-        my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
-        my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
-        my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
-        my %FollowUpOptions     = $QueueObject->GetFollowUpOptionList(
-            Valid => 0,
-        );
-
         ATTRIBUTE:
         for my $Attribute ( keys %QueueData ) {
 
             next ATTRIBUTE unless $Attribute =~ /ID/;
 
+            # single-value attributes
             if ( $Attribute eq 'ValidID' ) {
                 my $Valid = $ValidObject->ValidLookup(
                     ValidID => $QueueData{ValidID},
@@ -159,6 +161,7 @@ sub ExportQueues {
             }
         }
 
+        # delete unneeded attributes to avoid bloating the export
         delete $QueueData{ChangeTime};
         delete $QueueData{CreateTime};
         delete $QueueData{Email};
@@ -176,13 +179,16 @@ sub ImportQueues {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $GroupObject         = $Kernel::OM->Get('Kernel::System::Group');
     my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
     my $SalutationObject    = $Kernel::OM->Get('Kernel::System::Salutation');
     my $SignatureObject     = $Kernel::OM->Get('Kernel::System::Signature');
     my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
     my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
-    my %FollowUpOptionList  = $QueueObject->GetFollowUpOptionList(
+
+    # fetch lookup lists
+    my %FollowUpOptionList = $QueueObject->GetFollowUpOptionList(
         Valid => 0,
     );
     my %FollowUpOptionLookup = reverse %FollowUpOptionList;
@@ -299,6 +305,7 @@ sub ImportQueues {
         }
 
         # translate named data back to IDs
+        # single-value attributes
         $QueueData->{FollowUpID} = $FollowUpOptionLookup{ $QueueData->{FollowUp} };
         $QueueData->{GroupID}    = $GroupObject->GroupLookup(
             Group => $QueueData->{Group},
@@ -307,6 +314,7 @@ sub ImportQueues {
             Valid => $QueueData->{Valid},
         );
 
+        # update
         if ($QueueID) {
 
             # get system address id and set it
@@ -318,7 +326,6 @@ sub ImportQueues {
                     Valid => $SystemAddress{Valid},
                 );
 
-                # TODO use $QueueID instead...?
                 $SystemAddress{QueueID} = $QueueObject->QueueLookup(
                     Queue => $SystemAddress{Queue},
                 );
@@ -351,6 +358,8 @@ sub ImportQueues {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $QueueID = $QueueObject->QueueAdd(
                 $QueueData->%*,
