@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -128,18 +126,22 @@ sub Run {
             for my $QueueName ( keys $ImportData->{QueueTemplates}->%* ) {
 
                 my $Selected = grep { $QueueName eq $_ } @QueuesSelected;
-                next QUEUENAME if !$Selected;
 
+                next QUEUENAME if !$Selected;
                 next QUEUENAME if !IsArrayRefWithData( $ImportData->{QueueTemplates}{$QueueName} );
 
                 $QueuesImport{$QueueName} = $ImportData->{QueueTemplates}{$QueueName};
             }
 
-            $QueueObject->ImportQueueTemplates(
+            my $Success = $QueueObject->ImportQueueTemplates(
                 QueueTemplates            => \%QueuesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
+            if ( !$Success ) {
+
+                # TODO show error
+            }
         }
 
         # redirect to AdminQueue
@@ -167,13 +169,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @Queues = $ParamObject->GetArray( Param => 'Queues' );
-
         my %Data;
         my $HTML;
+        my @Queues = $ParamObject->GetArray( Param => 'Queues' );
 
         if (@Queues) {
-
             $Data{QueueTemplates} = $QueueObject->ExportQueueTemplates(
                 Queues => \@Queues,
             );
@@ -205,7 +205,6 @@ sub Run {
         );
 
         return $HTML;
-
     }
 
     # ------------------------------------------------------------ #

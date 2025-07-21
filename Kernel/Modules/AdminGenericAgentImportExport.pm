@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -127,18 +125,22 @@ sub Run {
             for my $GenericAgentName ( keys $ImportData->{GenericAgents}->%* ) {
 
                 my $Selected = grep { $GenericAgentName eq $_ } @GenericAgentsSelected;
-                next GENERICAGENTNAME if !$Selected;
 
+                next GENERICAGENTNAME if !$Selected;
                 next GENERICAGENTNAME if !IsHashRefWithData( $ImportData->{GenericAgents}{$GenericAgentName} );
 
                 $GenericAgentsImport{$GenericAgentName} = $ImportData->{GenericAgents}{$GenericAgentName};
             }
 
-            $GenericAgentObject->ImportGenericAgents(
+            my $Success = $GenericAgentObject->ImportGenericAgents(
                 GenericAgents             => \%GenericAgentsImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
+            if ( !$Success ) {
+
+                # TODO show error
+            }
         }
 
         # redirect to AdminGenericAgent
@@ -167,13 +169,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @GenericAgents = $ParamObject->GetArray( Param => 'GenericAgents' );
-
         my %Data;
         my $HTML;
+        my @GenericAgents = $ParamObject->GetArray( Param => 'GenericAgents' );
 
         if (@GenericAgents) {
-
             $Data{GenericAgents} = $GenericAgentObject->ExportGenericAgents(
                 GenericAgents => \@GenericAgents,
             );

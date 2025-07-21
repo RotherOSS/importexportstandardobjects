@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -128,18 +126,22 @@ sub Run {
             for my $GroupName ( keys $ImportData->{Groups}->%* ) {
 
                 my $Selected = grep { $GroupName eq $_ } @GroupsSelected;
-                next GROUPNAME if !$Selected;
 
+                next GROUPNAME if !$Selected;
                 next GROUPNAME if !IsHashRefWithData( $ImportData->{Groups}{$GroupName} );
 
                 $GroupsImport{$GroupName} = $ImportData->{Groups}{$GroupName};
             }
 
-            $GroupObject->ImportGroups(
+            my $Success = $GroupObject->ImportGroups(
                 Groups                    => \%GroupsImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
+            if ( !$Success ) {
+
+                # TODO show error
+            }
         }
 
         # redirect to AdminGroup
@@ -168,13 +170,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @Groups = $ParamObject->GetArray( Param => 'Groups' );
-
         my %Data;
         my $HTML;
+        my @Groups = $ParamObject->GetArray( Param => 'Groups' );
 
         if (@Groups) {
-
             $Data{Groups} = $GroupObject->ExportGroups(
                 Groups => \@Groups,
             );
@@ -206,7 +206,6 @@ sub Run {
         );
 
         return $HTML;
-
     }
 
     # ------------------------------------------------------------ #

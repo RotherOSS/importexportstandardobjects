@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -128,8 +126,8 @@ sub Run {
             for my $TypeName ( keys $ImportData->{Types}->%* ) {
 
                 my $Selected = grep { $TypeName eq $_ } @TypesSelected;
-                next TYPENAME if !$Selected;
 
+                next TYPENAME if !$Selected;
                 next TYPENAME if !IsHashRefWithData( $ImportData->{Types}{$TypeName} );
 
                 $TypesImport{$TypeName} = $ImportData->{Types}{$TypeName};
@@ -159,7 +157,6 @@ sub Run {
             %Param,
             Type => $Self->{Subaction},
         );
-
     }
 
     # ------------------------------------------------------------ #
@@ -168,13 +165,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @Types = $ParamObject->GetArray( Param => 'Types' );
-
         my %Data;
         my $HTML;
+        my @Types = $ParamObject->GetArray( Param => 'Types' );
 
         if (@Types) {
-
             $Data{Types} = $TypeObject->ExportTypes(
                 Types => \@Types,
             );
@@ -206,7 +201,6 @@ sub Run {
         );
 
         return $HTML;
-
     }
 
     # ------------------------------------------------------------ #

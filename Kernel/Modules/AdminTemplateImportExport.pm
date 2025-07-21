@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -128,18 +126,22 @@ sub Run {
             for my $TemplateName ( keys $ImportData->{Templates}->%* ) {
 
                 my $Selected = grep { $TemplateName eq $_ } @TemplatesSelected;
-                next TEMPLATENAME if !$Selected;
 
+                next TEMPLATENAME if !$Selected;
                 next TEMPLATENAME if !IsHashRefWithData( $ImportData->{Templates}{$TemplateName} );
 
                 $TemplatesImport{$TemplateName} = $ImportData->{Templates}{$TemplateName};
             }
 
-            $StandardTemplateObject->ImportTemplates(
+            my $Success = $StandardTemplateObject->ImportTemplates(
                 Templates                 => \%TemplatesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
+            if ( !$Success ) {
+
+                # TODO show error
+            }
         }
 
         # redirect to AdminTemplate
@@ -159,7 +161,6 @@ sub Run {
             %Param,
             Type => $Self->{Subaction},
         );
-
     }
 
     # ------------------------------------------------------------ #
@@ -168,13 +169,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @Templates = $ParamObject->GetArray( Param => 'Templates' );
-
         my %Data;
         my $HTML;
+        my @Templates = $ParamObject->GetArray( Param => 'Templates' );
 
         if (@Templates) {
-
             $Data{Templates} = $StandardTemplateObject->ExportTemplates(
                 Templates => \@Templates,
             );
@@ -206,7 +205,6 @@ sub Run {
         );
 
         return $HTML;
-
     }
 
     # ------------------------------------------------------------ #

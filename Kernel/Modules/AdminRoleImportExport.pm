@@ -1,7 +1,6 @@
 # --
 # OTOBO is a web-based ticketing system for service organisations.
 # --
-# Copyright (C) 2012-2020 Znuny GmbH, http://znuny.com/
 # Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
 # --
 # This program is free software: you can redistribute it and/or modify it under
@@ -20,7 +19,6 @@ use strict;
 use warnings;
 
 # core modules
-use List::AllUtils qw(first);
 
 # CPAN modules
 
@@ -128,18 +126,22 @@ sub Run {
             for my $RoleName ( keys $ImportData->{Roles}->%* ) {
 
                 my $Selected = grep { $RoleName eq $_ } @RolesSelected;
-                next ROLENAME if !$Selected;
 
+                next ROLENAME if !$Selected;
                 next ROLENAME if !IsHashRefWithData( $ImportData->{Roles}{$RoleName} );
 
                 $RolesImport{$RoleName} = $ImportData->{Roles}{$RoleName};
             }
 
-            $GroupObject->ImportRoles(
+            my $Success = $GroupObject->ImportRoles(
                 Roles                     => \%RolesImport,
                 OverwriteExistingEntities => $OverwriteExistingEntities,
                 UserID                    => $Self->{UserID},
             );
+            if ( !$Success ) {
+
+                # TODO show error
+            }
         }
 
         # redirect to AdminRole
@@ -159,7 +161,6 @@ sub Run {
             %Param,
             Type => $Self->{Subaction},
         );
-
     }
 
     # ------------------------------------------------------------ #
@@ -168,13 +169,11 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ExportAction' ) {
 
         # check required parameters
-        my @Roles = $ParamObject->GetArray( Param => 'Roles' );
-
         my %Data;
         my $HTML;
+        my @Roles = $ParamObject->GetArray( Param => 'Roles' );
 
         if (@Roles) {
-
             $Data{Roles} = $GroupObject->ExportRoles(
                 Roles => \@Roles,
             );
@@ -206,7 +205,6 @@ sub Run {
         );
 
         return $HTML;
-
     }
 
     # ------------------------------------------------------------ #
