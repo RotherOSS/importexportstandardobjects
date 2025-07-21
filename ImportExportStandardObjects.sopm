@@ -34,6 +34,7 @@
         <File Permission="660" Location="Kernel/Autoload/TemplateImportExport.pm" />
         <File Permission="660" Location="Kernel/Autoload/TypeImportExport.pm" />
         <File Permission="660" Location="Kernel/Config/Files/XML/ImportExportStandardObjects.xml" />
+        <File Permission="660" Location="Kernel/Language/de_ImportExportStandardObjects.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGenericAgentImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminGroupImportExport.pm" />
         <File Permission="660" Location="Kernel/Modules/AdminQueueImportExport.pm" />
