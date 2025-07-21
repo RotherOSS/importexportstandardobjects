@@ -91,7 +91,7 @@
 
             <div class='Content'>
                 <p class='FieldExplanation'>
-                    [% Translate('Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by role management module.') | html %]
+                    [% Translate('Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by role-group management module.') | html %]
                 </p>
                 <ul class='ActionList SpacingTop'>
                     <li>
@@ -118,7 +118,7 @@
                             </fieldset>
                             <button class='CallForAction Fullsize Center SpacingTop' id='RoleGroupImport' type='submit'>
                                 <span><i class='fa fa-upload'></i>
-                                    [% Translate('Role-Group Relations Import') | html %]
+                                    [% Translate('Role-Group Import') | html %]
                                 </span>
                             </button>
                         </form>
@@ -126,7 +126,7 @@
                     <li>
                         <a href='[% Env("Baselink") %]Action=AdminRoleGroupImportExport;Subaction=Export' id='GroupExport' class='CallForAction Fullsize Center'>
                             <span><i class='fa fa-download'></i>
-                                [% Translate('Role-Group Relations Export') | html %]
+                                [% Translate('Role-Group Export') | html %]
                             </span>
                         </a>
                     </li>

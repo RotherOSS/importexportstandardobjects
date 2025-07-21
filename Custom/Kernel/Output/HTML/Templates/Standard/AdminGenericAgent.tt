@@ -132,7 +132,7 @@
                             </fieldset>
                             <button class='CallForAction Fullsize Center SpacingTop' id='GenericAgentImport' type='submit'>
                                 <span><i class='fa fa-upload'></i>
-                                    [% Translate('GenericAgents Import') | html %]
+                                    [% Translate('Generic Agents Import') | html %]
                                 </span>
                             </button>
                         </form>
@@ -140,7 +140,7 @@
                     <li>
                         <a href='[% Env("Baselink") %]Action=AdminGenericAgentImportExport;Subaction=Export' id='GenericAgentExport' class='CallForAction Fullsize Center'>
                             <span><i class='fa fa-download'></i>
-                                [% Translate('GenericAgents Export') | html %]
+                                [% Translate('Generic Agents Export') | html %]
                             </span>
                         </a>
                     </li>
