@@ -45,8 +45,10 @@ sub ExportGroups {
         %GroupFilter = map { $_ => 1 } $Param{Groups}->@*;
     }
 
+    # get necessary objects
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
 
+    # fetch lookup lists
     my %GroupList = $GroupObject->GroupList(
         Valid => 0,
     );
@@ -71,6 +73,7 @@ sub ExportGroups {
 
             next ATTRIBUTE unless $Attribute =~ /ID/;
 
+            # single-value attributes
             if ( $Attribute eq 'ValidID' ) {
                 my $Valid = $ValidObject->ValidLookup(
                     ValidID => $GroupData{ValidID},
@@ -80,6 +83,7 @@ sub ExportGroups {
             }
         }
 
+        # delete unneeded attributes to avoid bloating the export
         delete $GroupData{ChangeBy};
         delete $GroupData{ChangeTime};
         delete $GroupData{CreateBy};
@@ -97,9 +101,12 @@ sub ImportGroups {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
     my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-    my %GroupList   = $GroupObject->GroupList(
+
+    # fetch lookup lists
+    my %GroupList = $GroupObject->GroupList(
         Valid => 0,
     );
     my %GroupLookup = reverse %GroupList;
@@ -114,10 +121,12 @@ sub ImportGroups {
         next GROUPNAME if ( !$Param{OverwriteExistingEntities} && $GroupID );
 
         # translate named data back to IDs
+        # single-value attributes
         $GroupData->{ValidID} = $ValidObject->ValidLookup(
             Valid => $GroupData->{Valid},
         );
 
+        # update
         if ($GroupID) {
             my $Success = $GroupObject->GroupUpdate(
                 $GroupData->%*,
@@ -126,6 +135,8 @@ sub ImportGroups {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $GroupID = $GroupObject->GroupAdd(
                 $GroupData->%*,

@@ -45,8 +45,10 @@ sub ExportRoles {
         %RoleFilter = map { $_ => 1 } $Param{Roles}->@*;
     }
 
+    # get necessary objects
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
 
+    # fetch lookup lists
     my %RoleList = $GroupObject->RoleList(
         Valid => 0,
     );
@@ -71,6 +73,7 @@ sub ExportRoles {
 
             next ATTRIBUTE unless $Attribute =~ /ID/;
 
+            # single-value attributes
             if ( $Attribute eq 'ValidID' ) {
                 my $Valid = $ValidObject->ValidLookup(
                     ValidID => $RoleData{ValidID},
@@ -80,6 +83,7 @@ sub ExportRoles {
             }
         }
 
+        # delete unneeded attributes to avoid bloating the export
         delete $RoleData{ChangeBy};
         delete $RoleData{ChangeTime};
         delete $RoleData{CreateBy};
@@ -97,9 +101,12 @@ sub ImportRoles {
 
     my $UserID = $Self->{UserID} || $Param{UserID};
 
+    # get necessary objects
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
     my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-    my %RoleList    = $GroupObject->RoleList(
+
+    # fetch lookup lists
+    my %RoleList = $GroupObject->RoleList(
         Valid => 0,
     );
     my %RoleLookup = reverse %RoleList;
@@ -114,10 +121,12 @@ sub ImportRoles {
         next ROLENAME if ( !$Param{OverwriteExistingEntities} && $RoleID );
 
         # translate named data back to IDs
+        # single-value attributes
         $RoleData->{ValidID} = $ValidObject->ValidLookup(
             Valid => $RoleData->{Valid},
         );
 
+        # update
         if ($RoleID) {
             my $Success = $GroupObject->RoleUpdate(
                 $RoleData->%*,
@@ -126,6 +135,8 @@ sub ImportRoles {
             );
             return unless $Success;
         }
+
+        # create
         else {
             my $RoleID = $GroupObject->RoleAdd(
                 $RoleData->%*,
