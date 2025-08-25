@@ -290,7 +290,7 @@ sub _QueueShow {
         my @QueuesAlreadyUsed;
 
         QUEUENAME:
-        for my $QueueName ( keys $Param{Data}{Queues}->%* ) {
+        for my $QueueName ( sort keys $Param{Data}{Queues}->%* ) {
 
             my $QueueData = $Param{Data}{Queues}{$QueueName};
 

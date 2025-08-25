@@ -289,7 +289,7 @@ sub _GroupShow {
         my @GroupsAlreadyUsed;
 
         GROUPNAME:
-        for my $GroupName ( keys $Param{Data}{Groups}->%* ) {
+        for my $GroupName ( sort keys $Param{Data}{Groups}->%* ) {
 
             my $GroupData = $Param{Data}{Groups}{$GroupName};
 

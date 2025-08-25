@@ -288,7 +288,7 @@ sub _RoleShow {
         my @RolesAlreadyUsed;
 
         ROLENAME:
-        for my $RoleName ( keys $Param{Data}{Roles}->%* ) {
+        for my $RoleName ( sort keys $Param{Data}{Roles}->%* ) {
 
             my $RoleData = $Param{Data}{Roles}{$RoleName};
 

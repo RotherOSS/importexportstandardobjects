@@ -285,7 +285,7 @@ sub _GenericAgentShow {
         my @GenericAgentsAlreadyUsed;
 
         GENERICAGENTNAME:
-        for my $GenericAgentName ( keys $Param{Data}{GenericAgents}->%* ) {
+        for my $GenericAgentName ( sort keys $Param{Data}{GenericAgents}->%* ) {
 
             my $GenericAgentData = $Param{Data}{GenericAgents}{$GenericAgentName};
 

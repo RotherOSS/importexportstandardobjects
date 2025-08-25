@@ -284,7 +284,7 @@ sub _TypeShow {
         my @TypesAlreadyUsed;
 
         TYPENAME:
-        for my $TypeName ( keys $Param{Data}{Types}->%* ) {
+        for my $TypeName ( sort keys $Param{Data}{Types}->%* ) {
 
             my $TypeData = $Param{Data}{Types}{$TypeName};
 

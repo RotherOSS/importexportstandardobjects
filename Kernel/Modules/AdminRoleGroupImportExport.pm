@@ -280,7 +280,7 @@ sub _RoleShow {
         my @RolesAlreadyUsed;
 
         ROLENAME:
-        for my $RoleName ( keys $Param{Data}{RoleGroups}->%* ) {
+        for my $RoleName ( sort keys $Param{Data}{RoleGroups}->%* ) {
 
             push @RolesAlreadyUsed, $RoleName;
 

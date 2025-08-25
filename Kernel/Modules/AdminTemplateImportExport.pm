@@ -288,7 +288,7 @@ sub _TemplateShow {
         my @TemplatesAlreadyUsed;
 
         TEMPLATENAME:
-        for my $TemplateName ( keys $Param{Data}{Templates}->%* ) {
+        for my $TemplateName ( sort keys $Param{Data}{Templates}->%* ) {
 
             my $TemplateData = $Param{Data}{Templates}{$TemplateName};
 

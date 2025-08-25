@@ -282,7 +282,7 @@ sub _QueueShow {
         my @QueuesAlreadyUsed;
 
         QUEUENAME:
-        for my $QueueName ( keys $Param{Data}{QueueTemplates}->%* ) {
+        for my $QueueName ( sort keys $Param{Data}{QueueTemplates}->%* ) {
 
             push @QueuesAlreadyUsed, $QueueName;
 
