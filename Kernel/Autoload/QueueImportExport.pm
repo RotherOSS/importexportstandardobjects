@@ -229,7 +229,13 @@ sub ImportQueues {
         if ( scalar @NameElements > 1 ) {
             my $NameStrg = '';
             for my $Index ( 0 .. $#NameElements - 1 ) {
-                $NameStrg .= $NameElements[$Index];
+                if ($NameStrg) {
+                    $NameStrg .= '::' . $NameElements[$Index];
+                }
+                else {
+                    $NameStrg = $NameElements[$Index];
+                }
+                Dx $NameStrg;
 
                 if ( !$QueueLookup{$NameStrg} && !$Param{Queues}{$NameStrg} ) {
 
