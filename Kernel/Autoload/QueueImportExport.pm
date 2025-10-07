@@ -235,7 +235,6 @@ sub ImportQueues {
                 else {
                     $NameStrg = $NameElements[$Index];
                 }
-                Dx $NameStrg;
 
                 if ( !$QueueLookup{$NameStrg} && !$Param{Queues}{$NameStrg} ) {
 
