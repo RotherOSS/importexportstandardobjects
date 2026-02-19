@@ -2,9 +2,9 @@
 # OTOBO is a web-based ticketing system for service organisations.
 # --
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
-# Copyright (C) 2019-2025 Rother OSS GmbH, https://otobo.io/
+# Copyright (C) 2019-2026 Rother OSS GmbH, https://otobo.io/
 # --
-# $origin: otobo - f381d0afeb7e6548af50687d08121ab6d3acde93 - Kernel/Output/HTML/Templates/Standard/AdminQueue.tt
+# $origin: otobo - 5e25a4c80e219a5d9766a391c039b0655b53e8ae - Kernel/Output/HTML/Templates/Standard/AdminQueue.tt
 # --
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -416,7 +416,7 @@
                         <div class="Field">
                             [% Data.CalendarOption %]
                             <p class="FieldExplanation">
-                                [% Translate("The business calendar for Unlock Time and the Escalation Times. No selection means the Default calendard") | html %]
+                                [% Translate("The business calendar for unlock time and the escalation times. No selection means that the default calendar is used.") | html %]
                             </p>
                             <p class="FieldExplanation">
                                 [% Translate("Is defined in Admin > SystemConfiguration > Core > Time (Default Calendar = no selection) or in Calendars 1 through 9.") | html %]
