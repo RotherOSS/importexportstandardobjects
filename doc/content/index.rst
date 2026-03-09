@@ -27,6 +27,160 @@ Third-party software
 Usage
 =====
 
+The admin screens for the object types listed below are enhanced by a new widget. The widget allows importing and exporting data for the respective object type.
+
+Generic Agent
+-------------
+
+ .. figure:: images/AdminGenericAgent.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the generic agent overview screen in the admin interface.
+
+   The screenshot shows the generic agent overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminGenericAgentExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the generic agent export screen in the admin interface.
+
+   The screenshot shows the generic agent export screen in the admin interface.
+
+Group
+-----
+
+ .. figure:: images/AdminGroup.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the group overview screen in the admin interface.
+
+   The screenshot shows the group overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminGroupExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the group export screen in the admin interface.
+
+   The screenshot shows the group export screen in the admin interface.
+
+Queue
+-----
+
+ .. figure:: images/AdminQueue.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the queue overview screen in the admin interface.
+
+   The screenshot shows the queue overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminQueueExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the queue export screen in the admin interface.
+
+   The screenshot shows the queue export screen in the admin interface.
+
+Queue Template Relations
+------------------------
+
+ .. figure:: images/AdminQueueTemplate.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the queue template relations overview screen in the admin interface.
+
+   The screenshot shows the queue template relations overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminQueueTemplateExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the queue template relations export screen in the admin interface.
+
+   The screenshot shows the queue template relations export screen in the admin interface.
+
+Role
+----
+
+ .. figure:: images/AdminRole.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the role overview screen in the admin interface.
+
+   The screenshot shows the role overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminRoleExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the role export screen in the admin interface.
+
+   The screenshot shows the role export screen in the admin interface.
+
+Role Group Relations
+--------------------
+
+ .. figure:: images/AdminRoleGroup.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the role group relations overview screen in the admin interface.
+
+   The screenshot shows the role group relations overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminRoleGroupExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the role group relations export screen in the admin interface.
+
+   The screenshot shows the role group relations export screen in the admin interface.
+
+Template
+--------
+
+ .. figure:: images/AdminTemplate.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the template overview screen in the admin interface.
+
+   The screenshot shows the template overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminTemplateExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the template export screen in the admin interface.
+
+   The screenshot shows the template export screen in the admin interface.
+
+Type
+----
+
+ .. figure:: images/AdminType.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the type overview screen in the admin interface.
+
+   The screenshot shows the type overview screen in the admin interface.
+
+The export screen looks as follows:
+
+ .. figure:: images/AdminTypeExport.png
+   :align: center
+   :scale: 35%
+   :alt: The screenshot shows the type export screen in the admin interface.
+
+   The screenshot shows the type export screen in the admin interface.
+
 Setup
 -----
 
