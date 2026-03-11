@@ -27,26 +27,11 @@ Third-party software
 Usage
 =====
 
-The admin screens for the object types listed below are enhanced by a new widget. The widget allows importing and exporting data for the respective object type.
+The admin screens for a number of object types are enhanced by a new widget. The widget allows importing and exporting data for the respective object type. Shown below are the group and the role group relations as examples.
 
-Generic Agent
--------------
+For importing data, select the respective file in the file picker and click on the import button. Then an overview screen over the data to be imported is shown. The user can exclude data from import there.
 
- .. figure:: images/AdminGenericAgent.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the generic agent overview screen in the admin interface.
-
-   The screenshot shows the generic agent overview screen in the admin interface.
-
-The export screen looks as follows:
-
- .. figure:: images/AdminGenericAgentExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the generic agent export screen in the admin interface.
-
-   The screenshot shows the generic agent export screen in the admin interface.
+Likewise, the export shows an overview screen on which data to export. The data can be selected as well.
 
 Group
 -----
@@ -67,63 +52,6 @@ The export screen looks as follows:
 
    The screenshot shows the group export screen in the admin interface.
 
-Queue
------
-
- .. figure:: images/AdminQueue.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the queue overview screen in the admin interface.
-
-   The screenshot shows the queue overview screen in the admin interface.
-
-The export screen looks as follows:
-
- .. figure:: images/AdminQueueExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the queue export screen in the admin interface.
-
-   The screenshot shows the queue export screen in the admin interface.
-
-Queue Template Relations
-------------------------
-
- .. figure:: images/AdminQueueTemplate.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the queue template relations overview screen in the admin interface.
-
-   The screenshot shows the queue template relations overview screen in the admin interface.
-
-The export screen looks as follows:
-
- .. figure:: images/AdminQueueTemplateExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the queue template relations export screen in the admin interface.
-
-   The screenshot shows the queue template relations export screen in the admin interface.
-
-Role
-----
-
- .. figure:: images/AdminRole.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the role overview screen in the admin interface.
-
-   The screenshot shows the role overview screen in the admin interface.
-
-The export screen looks as follows:
-
- .. figure:: images/AdminRoleExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the role export screen in the admin interface.
-
-   The screenshot shows the role export screen in the admin interface.
-
 Role Group Relations
 --------------------
 
@@ -143,46 +71,17 @@ The export screen looks as follows:
 
    The screenshot shows the role group relations export screen in the admin interface.
 
-Template
---------
+Advanced Usage
+--------------
 
- .. figure:: images/AdminTemplate.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the template overview screen in the admin interface.
+For the more advanced use case, there are four new console commands:
 
-   The screenshot shows the template overview screen in the admin interface.
+- ``Admin::ImportExport::ImportACL``
+- ``Admin::ImportExport::ImportDynamicField``
+- ``Admin::ImportExport::ImportProcess``
+- ``Admin::ImportExport::ImportStandardObject``
 
-The export screen looks as follows:
-
- .. figure:: images/AdminTemplateExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the template export screen in the admin interface.
-
-   The screenshot shows the template export screen in the admin interface.
-
-Type
-----
-
- .. figure:: images/AdminType.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the type overview screen in the admin interface.
-
-   The screenshot shows the type overview screen in the admin interface.
-
-The export screen looks as follows:
-
- .. figure:: images/AdminTypeExport.png
-   :align: center
-   :scale: 35%
-   :alt: The screenshot shows the type export screen in the admin interface.
-
-   The screenshot shows the type export screen in the admin interface.
-
-Setup
------
+The commands take a file path as argument and import the data found in this file. ``Admin::ImportExport::ImportStandardObject`` relies on the export structure of the objects listed in the help text and determines which object type is imported.
 
 Configuration Reference
 -----------------------
