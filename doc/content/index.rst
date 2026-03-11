@@ -38,7 +38,7 @@ Group
 
  .. figure:: images/AdminGroup.png
    :align: center
-   :scale: 35%
+   :scale: 30%
    :alt: The screenshot shows the group overview screen in the admin interface.
 
    The screenshot shows the group overview screen in the admin interface.
@@ -47,7 +47,7 @@ The export screen looks as follows:
 
  .. figure:: images/AdminGroupExport.png
    :align: center
-   :scale: 35%
+   :scale: 30%
    :alt: The screenshot shows the group export screen in the admin interface.
 
    The screenshot shows the group export screen in the admin interface.
@@ -57,7 +57,7 @@ Role Group Relations
 
  .. figure:: images/AdminRoleGroup.png
    :align: center
-   :scale: 35%
+   :scale: 30%
    :alt: The screenshot shows the role group relations overview screen in the admin interface.
 
    The screenshot shows the role group relations overview screen in the admin interface.
@@ -66,7 +66,7 @@ The export screen looks as follows:
 
  .. figure:: images/AdminRoleGroupExport.png
    :align: center
-   :scale: 35%
+   :scale: 30%
    :alt: The screenshot shows the role group relations export screen in the admin interface.
 
    The screenshot shows the role group relations export screen in the admin interface.
