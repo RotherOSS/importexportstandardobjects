@@ -1,0 +1,228 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ImportExportStandardObjects\n"
+"POT-Creation-Date: 2026-03-17 08:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Template: AdminGenericAgentImportExport
+msgid "GenericAgents"
+msgstr ""
+
+#. Template: AdminGenericAgentImportExport
+msgid "Here you can export a configuration file of generic agents to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminGenericAgentImportExport
+msgid "GenericAgents List"
+msgstr ""
+
+#. Template: AdminGroupImportExport
+msgid "Here you can export a configuration file of groups to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminGroupImportExport
+msgid "Groups List"
+msgstr ""
+
+#. Template: AdminQueueImportExport
+msgid "Here you can export a configuration file of queues to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminQueueImportExport
+msgid "Queues List"
+msgstr ""
+
+#. Template: AdminQueueTemplatesImportExport
+msgid "Queue Template Relations"
+msgstr ""
+
+#. Template: AdminQueueTemplatesImportExport
+msgid "Here you can export a configuration file of queue-template relations to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminRoleGroupImportExport
+msgid "Role-Group Relations"
+msgstr ""
+
+#. Template: AdminRoleGroupImportExport
+msgid "Here you can export a configuration file of role-group relations to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminRoleGroupImportExport
+msgid "Role-Group relations List"
+msgstr ""
+
+#. Template: AdminRoleImportExport
+msgid "Here you can export a configuration file of roles to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminRoleImportExport
+msgid "Roles List"
+msgstr ""
+
+#. Template: AdminTemplateImportExport
+msgid "Here you can export a configuration file of templates to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminTemplateImportExport
+msgid "Templates List"
+msgstr ""
+
+#. Template: AdminTypeImportExport
+msgid "Here you can export a configuration file of types to import these on another system. The configuration file is exported in yml format."
+msgstr ""
+
+#. Template: AdminTypeImportExport
+msgid "Types List"
+msgstr ""
+
+#. Template: AdminGenericAgent
+msgid "Here you can upload a configuration file to import generic agents to your system. The file needs to be in .yml format as exported by generic agent management module."
+msgstr ""
+
+#. Template: AdminGenericAgent
+msgid "Generic Agents Import"
+msgstr ""
+
+#. Template: AdminGenericAgent
+msgid "Generic Agents Export"
+msgstr ""
+
+#. Template: AdminGroup
+msgid "Here you can upload a configuration file to import groups to your system. The file needs to be in .yml format as exported by group management module."
+msgstr ""
+
+#. Template: AdminGroup
+msgid "Groups Import"
+msgstr ""
+
+#. Template: AdminGroup
+msgid "Groups Export"
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Here you can upload a configuration file to import queues to your system. The file needs to be in .yml format as exported by queue management module."
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Queues Import"
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Queues Export"
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Is defined in Admin > System addresses."
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Only relevant if Postmaster Mail Account set to Dispatching by To: field."
+msgstr ""
+
+#. Template: AdminQueue
+msgid "The business calendar for Unlock Time and the Escalation Times. No selection means the Default calendard"
+msgstr ""
+
+#. Template: AdminQueue
+msgid "Is defined in Admin > SystemConfiguration > Core > Time (Default Calendar = no selection) or in Calendars 1 through 9."
+msgstr ""
+
+#. Template: AdminQueueTemplates
+msgid "Here you can upload a configuration file to import queue-template relations to your system. The file needs to be in .yml format as exported by queue-template management module."
+msgstr ""
+
+#. Template: AdminQueueTemplates
+msgid "Queue-Templates Import"
+msgstr ""
+
+#. Template: AdminQueueTemplates
+msgid "Queue-Templates Export"
+msgstr ""
+
+#. Template: AdminRole
+msgid "Here you can upload a configuration file to import roles to your system. The file needs to be in .yml format as exported by role management module."
+msgstr ""
+
+#. Template: AdminRole
+msgid "Roles Import"
+msgstr ""
+
+#. Template: AdminRole
+msgid "Roles Export"
+msgstr ""
+
+#. Template: AdminRoleGroup
+msgid "Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by role-group management module."
+msgstr ""
+
+#. Template: AdminRoleGroup
+msgid "Role-Group Import"
+msgstr ""
+
+#. Template: AdminRoleGroup
+msgid "Role-Group Export"
+msgstr ""
+
+#. Template: AdminTemplate
+msgid "Here you can upload a configuration file to import templates to your system. The file needs to be in .yml format as exported by template management module."
+msgstr ""
+
+#. Template: AdminTemplate
+msgid "Templates Import"
+msgstr ""
+
+#. Template: AdminTemplate
+msgid "Templates Export"
+msgstr ""
+
+#. Template: AdminType
+msgid "Here you can upload a configuration file to import types to your system. The file needs to be in .yml format as exported by type management module."
+msgstr ""
+
+#. Template: AdminType
+msgid "Types Import"
+msgstr ""
+
+#. Template: AdminType
+msgid "Types Export"
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for GenericAgent import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Group import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Queue import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Queue-Template relations import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Role import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Role-Group relations import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Template import and export functions."
+msgstr ""
+
+#. SysConfig
+msgid "Autoload configuration for Type import and export functions."
+msgstr ""
+
