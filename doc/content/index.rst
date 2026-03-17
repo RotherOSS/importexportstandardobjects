@@ -3,7 +3,7 @@
     :caption: Contents
 
 Sacrifice to Sphinx
-====================
+===================
 
 Description
 ===========
