@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ImportExportStandardObjects\n"
-"POT-Creation-Date: 2026-03-17 08:30+0000\n"
+"POT-Creation-Date: 2026-04-14 07:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgid "Types List"
 msgstr ""
 
 #. Template: AdminGenericAgent
-msgid "Here you can upload a configuration file to import generic agents to your system. The file needs to be in .yml format as exported by generic agent management module."
+msgid "Here you can upload a configuration file to import generic agents to your system. The file needs to be in .yml format as exported by the generic agent management module."
 msgstr ""
 
 #. Template: AdminGenericAgent
@@ -95,7 +95,7 @@ msgid "Generic Agents Export"
 msgstr ""
 
 #. Template: AdminGroup
-msgid "Here you can upload a configuration file to import groups to your system. The file needs to be in .yml format as exported by group management module."
+msgid "Here you can upload a configuration file to import groups to your system. The file needs to be in .yml format as exported by the group management module."
 msgstr ""
 
 #. Template: AdminGroup
@@ -107,7 +107,7 @@ msgid "Groups Export"
 msgstr ""
 
 #. Template: AdminQueue
-msgid "Here you can upload a configuration file to import queues to your system. The file needs to be in .yml format as exported by queue management module."
+msgid "Here you can upload a configuration file to import queues to your system. The file needs to be in .yml format as exported by the queue management module."
 msgstr ""
 
 #. Template: AdminQueue
@@ -135,7 +135,7 @@ msgid "Is defined in Admin > SystemConfiguration > Core > Time (Default Calendar
 msgstr ""
 
 #. Template: AdminQueueTemplates
-msgid "Here you can upload a configuration file to import queue-template relations to your system. The file needs to be in .yml format as exported by queue-template management module."
+msgid "Here you can upload a configuration file to import queue-template relations to your system. The file needs to be in .yml format as exported by the queue-template management module."
 msgstr ""
 
 #. Template: AdminQueueTemplates
@@ -147,7 +147,7 @@ msgid "Queue-Templates Export"
 msgstr ""
 
 #. Template: AdminRole
-msgid "Here you can upload a configuration file to import roles to your system. The file needs to be in .yml format as exported by role management module."
+msgid "Here you can upload a configuration file to import roles to your system. The file needs to be in .yml format as exported by the role management module."
 msgstr ""
 
 #. Template: AdminRole
@@ -159,7 +159,7 @@ msgid "Roles Export"
 msgstr ""
 
 #. Template: AdminRoleGroup
-msgid "Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by role-group management module."
+msgid "Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by the role-group management module."
 msgstr ""
 
 #. Template: AdminRoleGroup
@@ -171,7 +171,7 @@ msgid "Role-Group Export"
 msgstr ""
 
 #. Template: AdminTemplate
-msgid "Here you can upload a configuration file to import templates to your system. The file needs to be in .yml format as exported by template management module."
+msgid "Here you can upload a configuration file to import templates to your system. The file needs to be in .yml format as exported by the template management module."
 msgstr ""
 
 #. Template: AdminTemplate
@@ -183,7 +183,7 @@ msgid "Templates Export"
 msgstr ""
 
 #. Template: AdminType
-msgid "Here you can upload a configuration file to import types to your system. The file needs to be in .yml format as exported by type management module."
+msgid "Here you can upload a configuration file to import types to your system. The file needs to be in .yml format as exported by the type management module."
 msgstr ""
 
 #. Template: AdminType

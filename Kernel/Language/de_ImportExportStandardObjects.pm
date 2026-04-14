@@ -67,19 +67,19 @@ sub Data {
 
     # Template: AdminGenericAgent
     $Self->{Translation}->{'Here you can upload a configuration file to import generic agents to your system. The file needs to be in .yml format as exported by the generic agent management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Generic Agents in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Generic-Agent-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Generic Agents Import'} = 'Generic Agent Import';
     $Self->{Translation}->{'Generic Agents Export'} = 'Generic Agent Export';
 
     # Template: AdminGroup
     $Self->{Translation}->{'Here you can upload a configuration file to import groups to your system. The file needs to be in .yml format as exported by the group management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Gruppen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Gruppen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Groups Import'} = 'Gruppen-Import';
     $Self->{Translation}->{'Groups Export'} = 'Gruppen-Export';
 
     # Template: AdminQueue
     $Self->{Translation}->{'Here you can upload a configuration file to import queues to your system. The file needs to be in .yml format as exported by the queue management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Queues in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Queue-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Queues Import'} = 'Queue-Import';
     $Self->{Translation}->{'Queues Export'} = 'Queue-Export';
     $Self->{Translation}->{'Is defined in Admin > System addresses.'} = '';
@@ -92,31 +92,31 @@ sub Data {
 
     # Template: AdminQueueTemplates
     $Self->{Translation}->{'Here you can upload a configuration file to import queue-template relations to your system. The file needs to be in .yml format as exported by the queue-template management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Queue-Vorlagen-Beziehungen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Queue-Vorlagen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Queue-Templates Import'} = 'Queue-Vorlagen-Import';
     $Self->{Translation}->{'Queue-Templates Export'} = 'Queue-Vorlagen-Export';
 
     # Template: AdminRole
     $Self->{Translation}->{'Here you can upload a configuration file to import roles to your system. The file needs to be in .yml format as exported by the role management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Rollen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Rollen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Roles Import'} = 'Rollen-Import';
     $Self->{Translation}->{'Roles Export'} = 'Rollen-Export';
 
     # Template: AdminRoleGroup
     $Self->{Translation}->{'Here you can upload a configuration file to import role-group relations to your system. The file needs to be in .yml format as exported by the role-group management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Rollen-Gruppen-Beziehungen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Rollen-Gruppen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Role-Group Import'} = 'Rollen-Gruppen-Import';
     $Self->{Translation}->{'Role-Group Export'} = 'Rollen-Gruppen-Export';
 
     # Template: AdminTemplate
     $Self->{Translation}->{'Here you can upload a configuration file to import templates to your system. The file needs to be in .yml format as exported by the template management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Vorlagen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Vorlagen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Templates Import'} = 'Vorlagen-Import';
     $Self->{Translation}->{'Templates Export'} = 'Vorlagen-Export';
 
     # Template: AdminType
     $Self->{Translation}->{'Here you can upload a configuration file to import types to your system. The file needs to be in .yml format as exported by the type management module.'} =
-        'Hier können Sie eine Konfigurationsdatei hochladen, um Typen in Ihr System zu importieren. Die Datei muss im .yml-Format vorliegen, wie es von dem Typen-Verwaltungsmodul exportiert wird.';
+        '';
     $Self->{Translation}->{'Types Import'} = 'Typen-Import';
     $Self->{Translation}->{'Types Export'} = 'Typen-Export';
 
