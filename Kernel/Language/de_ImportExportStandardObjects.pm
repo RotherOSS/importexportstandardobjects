@@ -82,13 +82,6 @@ sub Data {
         '';
     $Self->{Translation}->{'Queues Import'} = 'Queue-Import';
     $Self->{Translation}->{'Queues Export'} = 'Queue-Export';
-    $Self->{Translation}->{'Is defined in Admin > System addresses.'} = '';
-    $Self->{Translation}->{'Only relevant if Postmaster Mail Account set to Dispatching by To: field.'} =
-        '';
-    $Self->{Translation}->{'The business calendar for Unlock Time and the Escalation Times. No selection means the Default calendard'} =
-        '';
-    $Self->{Translation}->{'Is defined in Admin > SystemConfiguration > Core > Time (Default Calendar = no selection) or in Calendars 1 through 9.'} =
-        '';
 
     # Template: AdminQueueTemplates
     $Self->{Translation}->{'Here you can upload a configuration file to import queue-template relations to your system. The file needs to be in .yml format as exported by the queue-template management module.'} =

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ImportExportStandardObjects\n"
-"POT-Creation-Date: 2026-04-14 07:37+0000\n"
+"POT-Creation-Date: 2026-09-15 14:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,22 +116,6 @@ msgstr ""
 
 #. Template: AdminQueue
 msgid "Queues Export"
-msgstr ""
-
-#. Template: AdminQueue
-msgid "Is defined in Admin > System addresses."
-msgstr ""
-
-#. Template: AdminQueue
-msgid "Only relevant if Postmaster Mail Account set to Dispatching by To: field."
-msgstr ""
-
-#. Template: AdminQueue
-msgid "The business calendar for Unlock Time and the Escalation Times. No selection means the Default calendard"
-msgstr ""
-
-#. Template: AdminQueue
-msgid "Is defined in Admin > SystemConfiguration > Core > Time (Default Calendar = no selection) or in Calendars 1 through 9."
 msgstr ""
 
 #. Template: AdminQueueTemplates
