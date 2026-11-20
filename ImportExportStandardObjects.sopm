@@ -6,7 +6,8 @@
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://otobo.io/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
-    <Description Lang="en">This package provides import and export of some standard objects via admin interface and import via console command.</Description>
+    <Description Lang="en">Provides import and export of some standard objects via admin interface and import via console command.</Description>
+    <Description Lang="hu">Néhány szabványos objektum importálását és exportálását biztosítja az adminisztrátori felületen keresztül, valamint a konzolparancs használatával történő importálást.</Description>
     <Filelist>
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGenericAgent.pm" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminGenericInterfaceWebservice.pm" />
